@@ -1,0 +1,16 @@
+{
+  "Navigation": {
+    "Home": "Home",
+    "About": "About",
+    "Cars": "Cars",
+    "Book Now": "Book Now",
+    "Contact": "Contact",
+    "My Bookings": "My Bookings"
+  },
+  "LoginPage": {
+    "title": "Log in to your account",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Login"
+  }
+}

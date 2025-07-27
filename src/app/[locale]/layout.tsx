@@ -8,6 +8,10 @@ import PageWrapper from "@/components/PageWrapper";
 import Footer from "@/components/Footer";
 import { Analytics } from "@vercel/analytics/next";
 import { Toaster } from "@/components/ui/sonner";
+import { hasLocale, NextIntlClientProvider } from "next-intl";
+import { notFound } from "next/navigation";
+import { routing } from "@/i18n/routing";
+import { getMessages } from "next-intl/server";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,13 +28,24 @@ export const metadata: Metadata = {
   description: "Car rental service",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }>) {
+  const { locale } = await params;
+
+  if (!hasLocale(routing.locales, locale)) {
+    notFound();
+  }
+
+  // Load messages for the current locale
+  const messages = await getMessages();
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable}  antialiased`}
       >
@@ -40,12 +55,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
-          <SmoothScroll />
-          <PageWrapper className="min-h-screen w-full">
-            {children} <Toaster />
-          </PageWrapper>
-          <Footer />
+          <NextIntlClientProvider messages={messages}>
+            <Header />
+            <SmoothScroll />
+            <PageWrapper className="min-h-screen w-full">
+              {children}
+              <Toaster />
+            </PageWrapper>
+            <Footer />
+          </NextIntlClientProvider>
         </ThemeProvider>
         <Analytics />
       </body>

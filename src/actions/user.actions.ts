@@ -20,16 +20,13 @@ export const get_current_user = async () => {
     const currentUser = await prisma.user.findUnique({
       where: { id: decoded.userId },
       select: {
-        properties: true,
         id: true,
         email: true,
-        CreditTransaction: true,
-        credit: true,
-        lastName: true,
         name: true,
-        phone: true,
-        role: true,
+        lastName: true,
+        role: true, // Include role in the selection
         createdAt: true,
+        updatedAt: true,
       },
     });
 

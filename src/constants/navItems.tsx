@@ -1,4 +1,5 @@
 import { Home, Info, Car, Phone, Calendar, User } from "lucide-react";
+import { useLocale } from "next-intl";
 
 type NavItem = {
   href: string;
