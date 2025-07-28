@@ -18,7 +18,7 @@ const NavItems = () => {
           className="hover:bg-transparent"
         >
           <Link
-            href={`${locale}${item.href}`}
+            href={`${item.href === "/" ? `/${locale}` : item.href}`}
             className={`group flex items-center gap-2 px-4 py-2 rounded-lg  transition-colors  ${item.hoverColor}`}
           >
             {item.icon}

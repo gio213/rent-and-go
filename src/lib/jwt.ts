@@ -6,6 +6,7 @@ const JWT_SECRET = new TextEncoder().encode(env.JWT_SECRET);
 export type JwtPayload = {
   userId: string;
   email: string;
+  name: string;
   role: "USER" | "ADMIN";
 };
 

@@ -9,6 +9,12 @@ enum Role {
   ADMIN
 }
 
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -19,14 +25,50 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
+  id        String    @id @default(cuid())
+  email     String    @unique
   password  String
   name      String
   lastName  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  role      Role     @default(USER)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  role      Role      @default(USER)
+  bookings  Booking[]
 
   @@map("users")
+}
+
+model CarForRent {
+  id          String    @id @default(cuid())
+  brand       String
+  model       String
+  year        Int
+  description String
+  price       Float
+  image       String[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  bookings    Booking[]
+
+  @@map("cars_for_rent")
+}
+
+model Booking {
+  id           String        @id @default(cuid())
+  userId       String
+  carId        String
+  paid         Boolean       @default(false)
+  startDate    DateTime
+  endDate      DateTime
+  durationDays Int
+  totalPrice   Float
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  status       BookingStatus @default(PENDING)
+
+  user User       @relation(fields: [userId], references: [id])
+  car  CarForRent @relation(fields: [carId], references: [id])
+
+  @@index([carId])
+  @@map("bookings")
 }

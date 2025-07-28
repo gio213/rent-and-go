@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 import { verifyToken } from "@/lib/jwt";
 import { routing } from "./i18n/routing";
 import createIntlMiddleware from "next-intl/middleware";
+import { de } from "zod/v4/locales";
 
 // Create the internationalization middleware
 const intlMiddleware = createIntlMiddleware(routing);
@@ -70,6 +71,12 @@ export async function middleware(req: NextRequest) {
       const localeMatch = pathname.match(/^\/([a-z]{2})\//);
       const locale = localeMatch ? localeMatch[1] : routing.defaultLocale;
       return NextResponse.redirect(new URL(`/${locale}/auth/login`, req.url));
+    }
+
+    if (decoded && decoded.role === "USER") {
+      return NextResponse.redirect(
+        new URL(`/${routing.defaultLocale}/`, req.url)
+      );
     }
 
     // RBAC checks

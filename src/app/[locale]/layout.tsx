@@ -12,6 +12,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { getMessages } from "next-intl/server";
+import { AuthProvider } from "@/context/authContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -56,13 +57,15 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <NextIntlClientProvider messages={messages}>
-            <Header />
-            <SmoothScroll />
-            <PageWrapper className="min-h-screen w-full">
-              {children}
-              <Toaster />
-            </PageWrapper>
-            <Footer />
+            <AuthProvider>
+              <Header />
+              <SmoothScroll />
+              <PageWrapper className="min-h-screen w-full">
+                {children}
+                <Toaster />
+              </PageWrapper>
+              <Footer />
+            </AuthProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
         <Analytics />

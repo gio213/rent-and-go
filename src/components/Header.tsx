@@ -6,6 +6,7 @@ import { MobileNavs } from "./MobileNavItems";
 import Logo from "./Logo";
 import LoginButton from "./LoginButton";
 import LocaleSwitcher from "./LocaleSwitcher";
+import UserProfile from "./UserProfile";
 
 interface HeaderProps {
   className?: string;
@@ -42,9 +43,7 @@ const Header: React.FC<HeaderProps> = ({ className = "" }) => {
 
           {/* Right Section - Actions */}
           <div className="flex items-center gap-2 flex-shrink-0">
-            <div className="flex items-center">
-              <LoginButton />
-            </div>
+            <UserProfile />
             <div className="flex items-center min-w-[80px] justify-center">
               <LocaleSwitcher />
             </div>

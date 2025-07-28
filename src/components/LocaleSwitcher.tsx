@@ -1,16 +1,17 @@
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
+import { SelectItem } from "./ui/select";
 import LocaleSwitcherSelect from "./LocalSwitcherSelect";
 
 export default function LocaleSwitcher() {
   const locale = useLocale();
 
   return (
-    <LocaleSwitcherSelect defaultValue={locale} label={locale}>
+    <LocaleSwitcherSelect defaultValue={locale} label="Language">
       {routing.locales.map((cur) => (
-        <option key={cur} value={cur}>
-          {cur}
-        </option>
+        <SelectItem key={cur} value={cur}>
+          {cur.toUpperCase()}
+        </SelectItem>
       ))}
     </LocaleSwitcherSelect>
   );

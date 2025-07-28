@@ -3,8 +3,11 @@
 import clsx from "clsx";
 import { useParams } from "next/navigation";
 import { Locale } from "next-intl";
-import { ChangeEvent, ReactNode, useTransition } from "react";
+import { ReactNode, useTransition } from "react";
 import { usePathname, useRouter } from "@/i18n/navigation";
+import { Label } from "./ui/label";
+import { Select, SelectContent, SelectTrigger, SelectValue } from "./ui/select";
+import { Languages } from "lucide-react";
 
 type Props = {
   children: ReactNode;
@@ -22,8 +25,8 @@ export default function LocaleSwitcherSelect({
   const pathname = usePathname();
   const params = useParams();
 
-  function onSelectChange(event: ChangeEvent<HTMLSelectElement>) {
-    const nextLocale = event.target.value as Locale;
+  function onSelectChange(value: string) {
+    const nextLocale = value as Locale;
     startTransition(() => {
       router.replace(
         // @ts-expect-error -- TypeScript will validate that only known `params`
@@ -36,22 +39,24 @@ export default function LocaleSwitcherSelect({
   }
 
   return (
-    <label
-      className={clsx(
-        "relative text-gray-400",
-        isPending && "transition-opacity [&:disabled]:opacity-30"
-      )}
+    <div
+      className={clsx("relative", isPending && "transition-opacity opacity-50")}
     >
-      <p className="sr-only">{label}</p>
-      <select
-        className="inline-flex appearance-none bg-transparent py-3 pl-2 pr-6"
+      <Label htmlFor="locale-select" className="sr-only">
+        {label}
+      </Label>
+      <Select
         defaultValue={defaultValue}
         disabled={isPending}
-        onChange={onSelectChange}
+        onValueChange={onSelectChange}
       >
-        {children}
-      </select>
-      <span className="pointer-events-none absolute right-2 top-[8px]">⌄</span>
-    </label>
+        <SelectTrigger id="locale-select" className="text-gray-400">
+          <Languages className="mr-2 h-4 w-4" />
+
+          <SelectValue placeholder={label} />
+        </SelectTrigger>
+        <SelectContent>{children}</SelectContent>
+      </Select>
+    </div>
   );
 }
