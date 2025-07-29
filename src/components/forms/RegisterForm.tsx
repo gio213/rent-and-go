@@ -20,9 +20,11 @@ import {
 import Link from "next/link";
 import { register_user } from "@/actions/user.actions";
 import { toast } from "sonner";
+import { useLocale } from "next-intl";
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = React.useState(false);
+  const locale = useLocale();
 
   const form = useForm<UserRegisterSchemaType>({
     resolver: zodResolver(UserRegisterSchema),
@@ -183,7 +185,10 @@ const RegisterForm = () => {
         {/* Footer */}
         <div className="mt-8 text-center text-xs">
           Already have an account?{" "}
-          <Link href="/auth/login" className="underline font-medium">
+          <Link
+            href={`/${locale}/auth/login`}
+            className="underline font-medium"
+          >
             Sign in
           </Link>
         </div>

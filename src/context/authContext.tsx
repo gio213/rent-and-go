@@ -10,6 +10,7 @@ type User = Awaited<ReturnType<typeof get_current_user>>;
 type AuthContextType = {
   user: User | null;
   loading: boolean;
+  isLoggedIn: boolean;
   logout: () => Promise<void>;
 };
 
@@ -17,12 +18,14 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   logout: async () => {},
+  isLoggedIn: false,
 });
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -34,8 +37,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         if (!res.ok) throw new Error("Not authenticated");
         const data = await res.json();
         setUser(data.user);
+        setIsLoggedIn(true);
       } catch {
         setUser(null);
+        setIsLoggedIn(false);
       } finally {
         setLoading(false);
       }
@@ -48,6 +53,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       await fetch("/api/logout", { method: "DELETE" });
       setUser(null);
+      setIsLoggedIn(false);
       router.push("/"); // ან router.refresh() თუ გინდა მხოლოდ განახლება
     } catch (error) {
       console.error("Logout error:", error);
@@ -55,7 +61,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, logout }}>
+    <AuthContext.Provider value={{ user, loading, isLoggedIn, logout }}>
       {children}
     </AuthContext.Provider>
   );

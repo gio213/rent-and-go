@@ -27,7 +27,7 @@ import { useAuth } from "@/context/authContext";
 import LoginButton from "./LoginButton";
 
 const UserProfile = () => {
-  const { loading, user: dbUser, logout } = useAuth();
+  const { loading, user: dbUser, logout, isLoggedIn } = useAuth();
   const [isClient, setIsClient] = useState(false);
 
   // Hydration fix for SSR
@@ -66,7 +66,7 @@ const UserProfile = () => {
 
   return (
     <div className="flex items-center gap-2">
-      {!dbUser ? (
+      {!isLoggedIn ? (
         <LoginButton />
       ) : (
         <div className="flex items-center gap-3">
@@ -75,7 +75,7 @@ const UserProfile = () => {
               <button className="flex  hover:cursor-pointer items-center gap-2 rounded-full p-1 hover:bg-muted transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                 <span className="text-sm font-medium hidden sm:inline-block">
                   Hello, {displayName}
-                  {dbUser.role && (
+                  {dbUser?.role && (
                     <span className="text-xs text-muted-foreground ml-1">
                       {`(${dbUser.role})`}
                     </span>
@@ -84,7 +84,8 @@ const UserProfile = () => {
 
                 <Avatar className="h-8 w-8">
                   <AvatarImage
-                    src="/assets/vest.png"
+                    className={`dark:bg-foreground`}
+                    src="/assets/person.png"
                     alt={`${displayName}'s profile`}
                   />
                   <AvatarFallback>{avatarFallback}</AvatarFallback>

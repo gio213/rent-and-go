@@ -39,10 +39,4 @@ export const navItems: NavItem[] = [
     icon: <Phone />,
     hoverColor: "hover:bg-yellow-100 ",
   },
-  {
-    href: "/my-bookings",
-    label: "My Bookings",
-    icon: <User />,
-    hoverColor: "hover:bg-yellow-100",
-  },
 ];

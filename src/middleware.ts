@@ -3,7 +3,6 @@ import type { NextRequest } from "next/server";
 import { verifyToken } from "@/lib/jwt";
 import { routing } from "./i18n/routing";
 import createIntlMiddleware from "next-intl/middleware";
-import { de } from "zod/v4/locales";
 
 // Create the internationalization middleware
 const intlMiddleware = createIntlMiddleware(routing);
@@ -17,9 +16,9 @@ export async function middleware(req: NextRequest) {
   );
 
   // Handle root path - redirect to default locale
-  if (pathname === "/") {
-    return NextResponse.redirect(new URL(`/${routing.defaultLocale}`, req.url));
-  }
+  // if (pathname === "/") {
+  //   return NextResponse.redirect(new URL(`/${routing.defaultLocale}`, req.url));
+  // }
 
   // If pathname is missing locale, redirect to add default locale
   if (

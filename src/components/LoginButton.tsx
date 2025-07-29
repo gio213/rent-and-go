@@ -8,11 +8,11 @@ const LoginButton = () => {
   return (
     <div>
       <Button
-        variant={"secondary"}
-        className="hidden md:inline-flex animate-pulse"
+        variant={"ghost"}
+        className="hidden md:inline-flex  font-bold"
         asChild
       >
-        <Link href={`${locale}/auth/login`}>Login</Link>
+        <Link href={`/${locale}/auth/login`}>Login</Link>
       </Button>
     </div>
   );

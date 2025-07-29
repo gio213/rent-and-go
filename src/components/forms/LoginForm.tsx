@@ -13,13 +13,23 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Eye, EyeOff, Mail, Lock, LogIn, UserPlus } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  LogIn,
+  UserPlus,
+  Loader2,
+} from "lucide-react";
 import Link from "next/link";
 import { login_user } from "@/actions/user.actions";
 import { toast } from "sonner";
+import { useLocale } from "next-intl";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = React.useState(false);
+  const locale = useLocale();
 
   const form = useForm<LoginSchemaType>({
     resolver: zodResolver(LoginSchema),
@@ -36,6 +46,7 @@ const LoginForm = () => {
       loading: "Logging in...",
       success: (result) => {
         form.reset();
+        window.location.href = "/";
         return result.message;
       },
       error: (error) => {
@@ -44,6 +55,8 @@ const LoginForm = () => {
       position: "top-right",
     });
   };
+
+  const { isSubmitting } = form.formState;
 
   const handleSignUpClick = () => {
     console.log("Navigate to sign up");
@@ -142,11 +155,18 @@ const LoginForm = () => {
 
               {/* Login Button */}
               <Button
+                disabled={isSubmitting}
                 type="submit"
-                className="w-full h-12 font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
+                className="hover:cursor-pointer w-full h-12 font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
               >
-                <LogIn className="w-5 h-5 mr-2" />
-                Sign In
+                {isSubmitting ? (
+                  <Loader2 className="animate-spin w-5 h-5 mr-2" />
+                ) : (
+                  <span className="flex items-center">
+                    <LogIn className="w-5 h-5 mr-2" />
+                    Login
+                  </span>
+                )}
               </Button>
             </form>
           </Form>
@@ -170,7 +190,10 @@ const LoginForm = () => {
               onClick={handleSignUpClick}
               className="group inline-flex items-center justify-center px-6 py-3 text-sm font-medium border rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
             >
-              <Link href="/auth/register" className="flex items-center">
+              <Link
+                href={`/${locale}/auth/register`}
+                className="flex items-center"
+              >
                 <UserPlus className="w-4 h-4 mr-2 group-hover:text-inherit" />
                 Don't have an account?{" "}
                 <span className="ml-1 font-semibold">Sign up</span>
