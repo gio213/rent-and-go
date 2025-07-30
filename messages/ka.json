@@ -5,12 +5,69 @@
     "Cars": "მანქანები",
     "Book Now": "დარეგისტრირდით ახლა",
     "Contact": "კონტაქტი",
-    "My Bookings": "ჩემი დაჯავშნები"
+    "My Bookings": "ჩემი დაჯავშნები",
+    "Login": "შესვლა"
   },
   "LoginPage": {
     "title": "შეიყვანეთ თქვენი ანგარიში",
+    "welcome back": "კეთილი იყოს თქვენი დაბრუნება",
+    "sign in subtitle": "შედით თქვენს ანგარიშში გასაგრძელებლად",
     "email": "ელ. ფოსტა",
+    "email address": "ელ. ფოსტის მისამართი",
+    "email placeholder": "შეიყვანეთ თქვენი ელ. ფოსტა",
     "password": "პაროლი",
-    "submit": "შესვლა"
+    "password placeholder": "შეიყვანეთ თქვენი პაროლი",
+    "forgot password": "დაგავიწყდათ პაროლი?",
+    "login": "შესვლა",
+    "logging in": "შესვლა...",
+    "submit": "შესვლა",
+    "new here": "ახალბედა ხართ?",
+    "no account": "არ გაქვთ ანგარიში?",
+    "sign up": "რეგისტრაცია",
+    "terms agreement": "შესვლით, თქვენ ეთანხმებით ჩვენს",
+    "terms of service": "მომსახურების წესებს",
+    "and": "და",
+    "privacy policy": "კონფიდენციალურობის პოლიტიკას",
+    "invalid credentials": "არასწორი ელ. ფოსტა ან პაროლი. გთხოვთ, სცადოთ ხელახლა."
+  },
+  "RegisterPage": {
+    "title": "შექმენით ანგარიში",
+    "subtitle": "შეავსეთ ფორმა დასაწყებად",
+    "first name": "სახელი",
+    "first name placeholder": "თქვენი სახელი",
+    "last name": "გვარი",
+    "last name placeholder": "თქვენი გვარი",
+    "email": "ელ. ფოსტა",
+    "email placeholder": "you@example.com",
+    "password": "პაროლი",
+    "password placeholder": "შექმენით პაროლი",
+    "register": "რეგისტრაცია",
+    "registering": "რეგისტრაცია...",
+    "already have account": "უკვე გაქვთ ანგარიში?",
+    "sign in": "შესვლა"
+  },
+  "UserProfile": {
+    "hello": "გამარჯობა",
+    "my account": "ჩემი ანგარიში",
+    "admin dashboard": "ადმინისტრაციული პანელი",
+    "profile": "პროფილი",
+    "list of cars": "მანქანების სია",
+    "add card": "მანქანის დამატება",
+    "logout": "გასვლა"
+  },
+  "AddCarForm": {
+    "title": "ახალი მანქანის დამატება",
+    "description": "შეავსეთ დეტალები ახალი მანქანის დასამატებლად ქირავნობის ფლოტში",
+    "car name": "მანქანის სახელი",
+    "car name placeholder": "შეიყვანეთ მანქანის სახელი",
+    "car model": "მანქანის მოდელი",
+    "car model placeholder": "შეიყვანეთ მანქანის მოდელი",
+    "car year": "მანქანის წელი",
+    "car year placeholder": "შეიყვანეთ მანქანის წელი",
+    "car price": "მანქანის ფასი",
+    "car price placeholder": "შეიყვანეთ მანქანის ფასი",
+    "car description": "მანქანის აღწერა",
+    "car description placeholder": "შეიყვანეთ მანქანის აღწერა",
+    "add car": "მანქანის დამატება"
   }
 }

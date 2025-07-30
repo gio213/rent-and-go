@@ -4,7 +4,6 @@ import { ModeToggle } from "./ThemeMode";
 import NavItems from "./NavItems";
 import { MobileNavs } from "./MobileNavItems";
 import Logo from "./Logo";
-import LoginButton from "./LoginButton";
 import LocaleSwitcher from "./LocaleSwitcher";
 import UserProfile from "./UserProfile";
 

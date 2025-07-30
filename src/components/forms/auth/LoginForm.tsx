@@ -10,9 +10,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+} from "../../ui/form";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
 import {
   Eye,
   EyeOff,
@@ -25,10 +25,11 @@ import {
 import Link from "next/link";
 import { login_user } from "@/actions/user.actions";
 import { toast } from "sonner";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = React.useState(false);
+  const t = useTranslations("LoginPage");
   const locale = useLocale();
 
   const form = useForm<LoginSchemaType>({
@@ -74,8 +75,8 @@ const LoginForm = () => {
           <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4">
             <LogIn className="w-8 h-8" />
           </div>
-          <h1 className="text-3xl font-bold mb-2">Welcome Back</h1>
-          <p>Sign in to your account to continue</p>
+          <h1 className="text-3xl font-bold mb-2">{t("welcome back")}</h1>
+          <p>{t("sign in subtitle")}</p>
         </div>
 
         {/* Login Form Card */}
@@ -89,13 +90,13 @@ const LoginForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-semibold">
-                      Email Address
+                      {t("email address")}
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
                         <Input
-                          placeholder="Enter your email"
+                          placeholder={t("email placeholder")}
                           className="pl-11 h-12 rounded-lg"
                           {...field}
                         />
@@ -113,14 +114,14 @@ const LoginForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-semibold">
-                      Password
+                      {t("password")}
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
                         <Input
                           type={showPassword ? "text" : "password"}
-                          placeholder="Enter your password"
+                          placeholder={t("password placeholder")}
                           className="pl-11 pr-11 h-12 rounded-lg"
                           {...field}
                         />
@@ -149,7 +150,7 @@ const LoginForm = () => {
                   onClick={handleForgotPasswordClick}
                   className="text-sm font-medium transition-colors"
                 >
-                  Forgot password?
+                  {t("forgot password")}
                 </button>
               </div>
 
@@ -164,7 +165,7 @@ const LoginForm = () => {
                 ) : (
                   <span className="flex items-center">
                     <LogIn className="w-5 h-5 mr-2" />
-                    Login
+                    {t("login")}
                   </span>
                 )}
               </Button>
@@ -179,7 +180,7 @@ const LoginForm = () => {
               <div className="w-full border-t"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4">New here?</span>
+              <span className="px-4">{t("new here")}</span>
             </div>
           </div>
 
@@ -195,8 +196,8 @@ const LoginForm = () => {
                 className="flex items-center"
               >
                 <UserPlus className="w-4 h-4 mr-2 group-hover:text-inherit" />
-                Don't have an account?{" "}
-                <span className="ml-1 font-semibold">Sign up</span>
+                {t("no account")}{" "}
+                <span className="ml-1 font-semibold">{t("sign up")}</span>
               </Link>
             </Button>
           </div>
@@ -204,13 +205,13 @@ const LoginForm = () => {
 
         {/* Footer */}
         <div className="mt-8 text-center text-xs">
-          By signing in, you agree to our{" "}
+          {t("terms agreement")}{" "}
           <Link href="#" className="underline">
-            Terms of Service
+            {t("terms of service")}
           </Link>{" "}
           and{" "}
           <Link href="#" className="underline">
-            Privacy Policy
+            {t("privacy policy")}
           </Link>
         </div>
       </div>

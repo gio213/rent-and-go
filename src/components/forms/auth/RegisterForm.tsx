@@ -9,9 +9,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+} from "../../ui/form";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
 import { Eye, EyeOff, Mail, Lock, LogIn, UserPlus } from "lucide-react";
 import {
   UserRegisterSchema,
@@ -20,11 +20,12 @@ import {
 import Link from "next/link";
 import { register_user } from "@/actions/user.actions";
 import { toast } from "sonner";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const locale = useLocale();
+  const t = useTranslations("RegisterPage");
 
   const form = useForm<UserRegisterSchemaType>({
     resolver: zodResolver(UserRegisterSchema),
@@ -59,8 +60,8 @@ const RegisterForm = () => {
           <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-4">
             <UserPlus className="w-8 h-8" />
           </div>
-          <h1 className="text-3xl font-bold mb-2">Create an Account</h1>
-          <p>Fill in the form to get started</p>
+          <h1 className="text-3xl font-bold mb-2">{t("title")}</h1>
+          <p>{t("subtitle")}</p>
         </div>
 
         {/* Form Card */}
@@ -74,11 +75,11 @@ const RegisterForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-semibold">
-                      First Name
+                      {t("first name")}
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Your first name"
+                        placeholder={t("first name placeholder")}
                         className="h-12 rounded-lg"
                         {...field}
                       />
@@ -95,11 +96,11 @@ const RegisterForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-semibold">
-                      Last Name
+                      {t("last name")}
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Your last name"
+                        placeholder={t("last name placeholder")}
                         className="h-12 rounded-lg"
                         {...field}
                       />
@@ -116,7 +117,7 @@ const RegisterForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-semibold">
-                      Email
+                      {t("email")}
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
@@ -140,7 +141,7 @@ const RegisterForm = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-semibold">
-                      Password
+                      {t("password")}
                     </FormLabel>
                     <FormControl>
                       <div className="relative">
@@ -176,7 +177,7 @@ const RegisterForm = () => {
                 className="w-full h-12 font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5"
               >
                 <UserPlus className="w-5 h-5 mr-2" />
-                Register
+                {t("register")}
               </Button>
             </form>
           </Form>
@@ -184,12 +185,12 @@ const RegisterForm = () => {
 
         {/* Footer */}
         <div className="mt-8 text-center text-xs">
-          Already have an account?{" "}
+          {t("already have account")}{" "}
           <Link
             href={`/${locale}/auth/login`}
             className="underline font-medium"
           >
-            Sign in
+            {t("sign in")}
           </Link>
         </div>
       </div>

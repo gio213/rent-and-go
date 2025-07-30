@@ -5,12 +5,70 @@
     "Cars": "Автомобили",
     "Book Now": "Забронировать сейчас",
     "Contact": "Контакт",
-    "My Bookings": "Мои бронирования"
+    "My Bookings": "Мои бронирования",
+    "Login": "Войти"
   },
   "LoginPage": {
     "title": "Войдите в свой аккаунт",
+    "welcome back": "Добро пожаловать обратно",
+    "sign in subtitle": "Войдите в свой аккаунт, чтобы продолжить",
     "email": "Электронная почта",
+    "email address": "Адрес электронной почты",
+    "email placeholder": "Введите вашу электронную почту",
     "password": "Пароль",
-    "submit": "Войти"
+    "password placeholder": "Введите ваш пароль",
+    "forgot password": "Забыли пароль?",
+    "login": "Войти",
+    "logging in": "Вход...",
+    "submit": "Войти",
+    "new here": "Впервые здесь?",
+    "no account": "Нет аккаунта?",
+    "sign up": "Зарегистрироваться",
+    "terms agreement": "Входя в систему, вы соглашаетесь с нашими",
+    "terms of service": "Условиями обслуживания",
+    "and": "и",
+    "privacy policy": "Политикой конфиденциальности",
+    "invalid credentials": "Неверная электронная почта или пароль. Пожалуйста, попробуйте еще раз."
+  },
+  "RegisterPage": {
+    "title": "Создать аккаунт",
+    "subtitle": "Заполните форму, чтобы начать",
+    "first name": "Имя",
+    "first name placeholder": "Ваше имя",
+    "last name": "Фамилия",
+    "last name placeholder": "Ваша фамилия",
+    "email": "Электронная почта",
+    "email placeholder": "you@example.com",
+    "password": "Пароль",
+    "password placeholder": "Создайте пароль",
+    "register": "Зарегистрироваться",
+    "registering": "Регистрация...",
+    "already have account": "Уже есть аккаунт?",
+    "sign in": "Войти"
+  },
+  "UserProfile": {
+    "hello": "Привет",
+    "my account": "Мой аккаунт",
+    "admin dashboard": "Админ панель",
+    "profile": "Профиль",
+    "list of cars": "Список автомобилей",
+    "add card": "Добавить автомобиль",
+    "logout": "Выйти"
+  },
+  "AddCarForm": {
+    "title": "Добавить новый автомобиль",
+    "description": "Заполните детали, чтобы добавить новый автомобиль в автопарк",
+    "car name": "Название автомобиля",
+    "car name placeholder": "Введите название автомобиля",
+    "car model": "Модель автомобиля",
+    "car model placeholder": "Введите модель автомобиля",
+    "car year": "Год выпуска",
+    "car year placeholder": "Введите год выпуска",
+    "car price": "Цена аренды",
+    "car price placeholder": "Введите цену аренды в $",
+    "car image": "Изображение автомобиля",
+    "upload image": "Загрузить изображение",
+    "submit car": "Добавить автомобиль",
+    "adding car": "Добавление автомобиля..."
   }
 }

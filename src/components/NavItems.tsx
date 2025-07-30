@@ -15,11 +15,11 @@ const NavItems = () => {
           key={index}
           asChild
           variant="ghost"
-          className="hover:bg-transparent"
+          className="hover:bg-accent-foreground/10 hover:text-foreground transition-colors duration-200 flex items-center gap-2 text-sm font-medium text-muted-foreground"
         >
           <Link
             href={`/${locale}${item.href}`}
-            className={`group flex items-center gap-2 px-4 py-2 rounded-lg  transition-colors  ${item.hoverColor}`}
+            className=" flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
           >
             {item.icon}
             <span className="text-sm font-bold">{t(item.label)}</span>

@@ -7,6 +7,9 @@ export const env = createEnv({
     DATABASE_URL: z.url({
       message: "Invalid DATABASE_URL format. Ensure it is a valid URL.",
     }),
+    BLOB_READ_WRITE_TOKEN: z.string().min(1, {
+      message: "BLOB_READ_WRITE_TOKEN is required",
+    }),
   },
   client: {},
   experimental__runtimeEnv: {},
