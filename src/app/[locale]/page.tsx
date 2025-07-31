@@ -1,10 +1,13 @@
-import { Button } from "@/components/ui/button";
-import { getTranslations } from "next-intl/server";
+import { list_cars } from "@/actions/car.actions";
+import CarCard from "@/components/CarCard";
 
 export default async function Home() {
+  const listed_cars = await list_cars();
   return (
-    <Button>
-      <h1>home page</h1>
-    </Button>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-10">
+      {listed_cars.map((car) => (
+        <CarCard key={car.id} car={car} />
+      ))}
+    </div>
   );
 }

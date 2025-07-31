@@ -27,7 +27,7 @@ export const add_car = async (carData: CarFormData) => {
   try {
     // 3. Upload all images to Vercel Blob and get URLs
     const uploadPromises = validatedData.images.map(async (file) => {
-      const blob = await put(file.name, file, {
+      const blob = await put(`${"rent-and-go"}/${file.name}`, file, {
         access: "public",
         addRandomSuffix: true,
       });
@@ -59,5 +59,35 @@ export const add_car = async (carData: CarFormData) => {
   } catch (error) {
     console.error("Error adding car:", error);
     throw new Error("Failed to add car. Please try again.");
+  }
+};
+
+export const list_cars = async () => {
+  try {
+    const cars = await prisma.carForRent.findMany({
+      select: {
+        id: true,
+        brand: true,
+        model: true,
+        year: true,
+        price: true,
+        image: true,
+        bookings: true, // Assuming you want to include bookings
+        description: true,
+        _count: {
+          select: {
+            bookings: true, // Assuming you want to count bookings
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc", // Order by creation date
+      },
+    });
+
+    return cars;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to list cars");
   }
 };

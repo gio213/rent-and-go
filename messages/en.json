@@ -66,11 +66,16 @@
     "yearPlaceholder": "Enter year (e.g., 2023)",
     "pricePerDay": "Price Per Day",
     "pricePlaceholder": "Enter daily rental price",
-    "description placeholder": "Description",
+    "carDescription": "Description",
     "descriptionPlaceholder": "Describe the car features, condition, etc.",
     "images": "Car Images",
     "imageHint": "Upload multiple images. Max 5MB per image.",
     "adding": "Adding Car...",
     "addCar": "Add Car"
+  },
+  "AppSidebar": {
+    "Dashboard": "Dashboard",
+    "Add Car": "Add Car",
+    "List Cars": "List Cars"
   }
 }

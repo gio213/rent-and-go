@@ -58,16 +58,24 @@
   "AddCarForm": {
     "title": "ახალი მანქანის დამატება",
     "description": "შეავსეთ დეტალები ახალი მანქანის დასამატებლად ქირავნობის ფლოტში",
-    "car name": "მანქანის სახელი",
-    "car name placeholder": "შეიყვანეთ მანქანის სახელი",
-    "car model": "მანქანის მოდელი",
-    "car model placeholder": "შეიყვანეთ მანქანის მოდელი",
-    "car year": "მანქანის წელი",
-    "car year placeholder": "შეიყვანეთ მანქანის წელი",
-    "car price": "მანქანის ფასი",
-    "car price placeholder": "შეიყვანეთ მანქანის ფასი",
-    "car description": "მანქანის აღწერა",
-    "car description placeholder": "შეიყვანეთ მანქანის აღწერა",
-    "add car": "მანქანის დამატება"
+    "brand": "ბრენდი",
+    "brandPlaceholder": "შეიყვანეთ მანქანის ბრენდი (მაგ., Toyota, BMW)",
+    "model": "მოდელი",
+    "modelPlaceholder": "შეიყვანეთ მანქანის მოდელი (მაგ., Camry, X5)",
+    "year": "წელი",
+    "yearPlaceholder": "შეიყვანეთ წელი (მაგ., 2023)",
+    "pricePerDay": "ფასი დღეში",
+    "pricePlaceholder": "შეიყვანეთ ქირავნობის ფასი დღეში",
+    "carDescription": "აღწერა",
+    "descriptionPlaceholder": "აღწერეთ მანქანის თავისებურებები, მდგომარეობა და ა.შ.",
+    "images": "მანქანის სურათები",
+    "imageHint": "ატვირთეთ რამდენიმე სურათი. მაქს. 5მბ თითო სურათზე.",
+    "adding": "მანქანის დამატება...",
+    "addCar": "მანქანის დამატება"
+  },
+  "AppSidebar": {
+    "Dashboard": "პანელი",
+    "Add Car": "მანქანის დამატება",
+    "List Cars": "მანქანების სია"
   }
 }
