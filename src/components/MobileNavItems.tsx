@@ -36,7 +36,7 @@ export function MobileNavs() {
           >
             <Link
               href={item.href}
-              className={`group flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${item.hoverColor}`}
+              className={`group flex items-center gap-2 px-4 py-2 rounded-lg transition-colors `}
             >
               {item.icon}
               <span className="text-xl font-bold font-finger">
