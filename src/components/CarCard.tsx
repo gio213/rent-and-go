@@ -1,15 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
-  Car,
   Calendar,
   DollarSign,
   ChevronLeft,
@@ -17,6 +10,8 @@ import {
   Eye,
 } from "lucide-react";
 import { list_cars } from "@/actions/car.actions";
+import Link from "next/link";
+import { useLocale } from "next-intl";
 
 type CarType = Awaited<ReturnType<typeof list_cars>>[number];
 
@@ -54,7 +49,9 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
   };
 
   // Fallback image
-  const currentImage = car.image[currentImageIndex] || "/placeholder-car.jpg";
+  const currentImage = car.image[currentImageIndex] || "/logo/logo.svg";
+
+  const locale = useLocale();
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 group">
@@ -69,12 +66,13 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
         {/* Image Navigation */}
         {car.image.length > 1 && (
           <>
-            <button
+            <Button
+              variant={"ghost"}
               onClick={prevImage}
               className="absolute left-2 top-1/2 transform -translate-y-1/2 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm"
             >
               <ChevronLeft className="w-4 h-4" />
-            </button>
+            </Button>
             <button
               onClick={nextImage}
               className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm"
@@ -125,9 +123,11 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
       {/* Footer Actions */}
       <CardFooter className="pt-4">
         <div className="flex gap-2 w-full">
-          <Button variant="outline" size="sm" className="flex-1">
-            <Eye className="w-4 h-4 mr-2" />
-            View Details
+          <Button variant="outline" size="sm" className="flex-1" asChild>
+            <Link href={`${locale}/car-detail/${car.id}`}>
+              <Eye className="w-4 h-4 mr-2" />
+              View Details
+            </Link>
           </Button>
           {isAvailable ? (
             <Button size="sm" className="flex-1">

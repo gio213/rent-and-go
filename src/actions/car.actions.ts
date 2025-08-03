@@ -48,6 +48,11 @@ export const add_car = async (carData: CarFormData) => {
         description: dbData.description,
         price: dbData.pricePerDay, // Map pricePerDay to price field
         image: dbData.imageUrl, // Array of URLs
+        doors: dbData.doors,
+        seats: dbData.seats,
+        fuelType: dbData.fuelType,
+        transmission: dbData.transmission,
+        type: dbData.type,
       },
     });
 
@@ -89,5 +94,36 @@ export const list_cars = async () => {
   } catch (error) {
     console.error(error);
     throw new Error("Failed to list cars");
+  }
+};
+
+export const car_details = async (carId: string) => {
+  try {
+    if (!carId) {
+      throw new Error("Car ID is required");
+    }
+    const car = await prisma.carForRent.findUnique({
+      where: { id: carId },
+      select: {
+        bookings: true,
+        id: true,
+        brand: true,
+        model: true,
+        year: true,
+        price: true,
+        image: true,
+        description: true,
+        doors: true,
+        seats: true,
+        fuelType: true,
+        transmission: true,
+        type: true,
+      },
+    });
+
+    return car;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Failed to retrieve car details");
   }
 };

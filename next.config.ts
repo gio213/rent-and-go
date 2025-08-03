@@ -8,6 +8,16 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "2mb",
     },
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "tokxv8ehtdjc1lpj.public.blob.vercel-storage.com",
+        port: "",
+        search: "",
+      },
+    ],
+  },
 };
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");

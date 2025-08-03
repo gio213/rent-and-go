@@ -45,7 +45,7 @@ const UserProfile = () => {
   };
 
   // Display name logic
-  const displayName = dbUser?.role === "USER" ? dbUser.name : dbUser?.lastName;
+  const displayName = dbUser?.name;
 
   // Avatar fallback logic
   const avatarFallback = displayName ? displayName.charAt(0).toUpperCase() : "";

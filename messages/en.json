@@ -71,7 +71,27 @@
     "images": "Car Images",
     "imageHint": "Upload multiple images. Max 5MB per image.",
     "adding": "Adding Car...",
-    "addCar": "Add Car"
+    "addCar": "Add Car",
+    "transmission": "Transmission",
+    "transmissionPlaceholder": "Enter transmission type (e.g., Automatic, Manual)",
+    "fuelType": "Fuel Type",
+    "fuelTypePlaceholder": "Enter fuel type (e.g., Petrol, Diesel, Electric)",
+    "doors": "Doors",
+    "doorsPlaceholder": "Enter number of doors (e.g., 4, 2)",
+    "seats": "Seats",
+    "seatsPlaceholder": "Enter number of seats (e.g., 5, 2)",
+    "type": "Car Type",
+    "typePlaceholder": "Select car type (e.g., Sedan, SUV, Truck)",
+    "typeOptions": {
+      "SEDAN": "Sedan",
+      "SUV": "SUV",
+      "TRUCK": "Truck",
+      "COUPE": "Coupe",
+      "CONVERTIBLE": "Convertible",
+      "HATCHBACK": "Hatchback",
+      "MINIVAN": "Minivan",
+      "WAGON": "Wagon"
+    }
   },
   "AppSidebar": {
     "Dashboard": "Dashboard",

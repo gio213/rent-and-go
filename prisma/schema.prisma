@@ -9,6 +9,17 @@ enum Role {
   ADMIN
 }
 
+enum CarType {
+  SEDAN
+  SUV
+  TRUCK
+  COUPE
+  CONVERTIBLE
+  HATCHBACK
+  MINIVAN
+  WAGON
+}
+
 enum BookingStatus {
   PENDING
   CONFIRMED
@@ -39,16 +50,21 @@ model User {
 }
 
 model CarForRent {
-  id          String    @id @default(cuid())
-  brand       String
-  model       String
-  year        Int
-  description String
-  price       Float
-  image       String[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  bookings    Booking[]
+  id           String    @id @default(cuid())
+  brand        String
+  model        String
+  year         Int
+  description  String
+  transmission String
+  fuelType     String
+  type         CarType
+  seats        Int
+  doors        Int
+  price        Float
+  image        String[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  bookings     Booking[]
 
   @@map("cars_for_rent")
 }

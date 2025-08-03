@@ -22,7 +22,7 @@ const NavItems = () => {
             className=" flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors duration-200"
           >
             {item.icon}
-            <span className="text-sm font-bold">{t(item.label)}</span>
+            <span className="text-sm font-bold ">{t(item.label)}</span>
           </Link>
         </Button>
       ))}
