@@ -97,5 +97,14 @@
     "Dashboard": "Dashboard",
     "Add Car": "Add Car",
     "List Cars": "List Cars"
+  },
+  "UnauthorizedPage": {
+    "title": "Access Denied",
+    "message": "You don't have permission to access this page",
+    "alertMessage": "You don't have permission to access this resource.",
+    "helpText": "If you believe this is an error, please contact your administrator or try the following:",
+    "homeButton": "Go Home",
+    "backButton": "Go Back",
+    "footer": "Error Code: 403 - Forbidden"
   }
 }

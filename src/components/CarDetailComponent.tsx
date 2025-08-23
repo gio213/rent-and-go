@@ -25,14 +25,16 @@ import {
 import Image from "next/image";
 import BookCar from "./BookCar";
 import BookCarForm from "./BookCar";
+import { Modal } from "./Modal";
 
 type CarDetail = Awaited<ReturnType<typeof car_details>>;
 
 const CarDetailComponent = ({ car }: { car: CarDetail }) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
   if (!car) {
     return (
-      <Card className="w-full max-w-4xl mx-auto">
+      <Card className="w-full max-w-6xl mx-auto">
         <CardContent className="p-8 text-center">
           <Car className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
           <h3 className="text-lg font-semibold text-muted-foreground">
@@ -66,117 +68,200 @@ const CarDetailComponent = ({ car }: { car: CarDetail }) => {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto space-y-6">
-      {/* Main Car Details Card */}
-      <Card className="overflow-hidden">
-        <div className="grid md:grid-cols-2 gap-0">
-          {/* Image Gallery */}
-          <div className="relative">
-            {car.image && car.image.length > 0 ? (
-              <div className="aspect-video relative">
+    <div className="max-w-7xl mx-auto p-4 lg:p-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+        {/* Left Side - Image Gallery */}
+        <div className="space-y-4">
+          {/* Main Image */}
+          <Card className="overflow-hidden p-0">
+            <div className="aspect-[4/3] relative bg-muted">
+              {car.image && car.image.length > 0 ? (
                 <Image
-                  src={selectedImage ? selectedImage : car.image[0]}
+                  src={selectedImage || car.image[0]}
                   alt={`${car.brand} ${car.model}`}
                   fill
-                  className="object-cover"
+                  className="object-cover transition-all duration-300"
                   priority
                 />
-              </div>
-            ) : (
-              <div className="aspect-video bg-muted flex items-center justify-center">
-                <Car className="h-16 w-16 text-muted-foreground" />
-              </div>
-            )}
-          </div>
-
-          {/* Car Information */}
-          <CardContent className="p-6">
-            <CardHeader className="p-0 mb-4">
-              <div className="flex items-center justify-between">
-                <Badge variant="secondary" className="mb-2">
-                  Manufacture year: {car.year}
-                </Badge>
-              </div>
-              <CardTitle className="text-2xl">
-                {car.brand} {car.model}
-              </CardTitle>
-              <CardDescription className="text-lg font-semibold text-primary">
-                ${car.price}/day
-              </CardDescription>
-            </CardHeader>
-
-            <div className="space-y-4">
-              <p className="text-muted-foreground leading-relaxed">
-                {car.description}
-              </p>
-
-              <Separator />
-
-              {/* Car Features */}
-              <div className="grid grid-cols-3 gap-4">
-                <div className="flex items-center gap-2">
-                  <Car className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm capitalize">{car.type}</span>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <Car className="h-16 w-16 text-muted-foreground" />
                 </div>
-                <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">{car.seats} Passengers</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Car className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm capitalize">{car.transmission}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Fuel className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm capitalize"> {car.fuelType}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <DoorOpen className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm capitalize"> {car.doors} Doors</span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">Insurance Included</span>
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* Action Buttons */}
-              <BookCarForm />
+              )}
             </div>
-          </CardContent>
-        </div>
-      </Card>
+          </Card>
 
-      {/* Additional Images Grid */}
-      {car.image && car.image.length > 1 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Gallery</CardTitle>
-            <CardDescription>More photos of this vehicle</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {/* Image Thumbnails */}
+          {car.image && car.image.length > 1 && (
+            <div className="grid grid-cols-4 gap-3">
               {car.image.map((image, index) => (
-                <div
+                <Card
                   key={index}
-                  className="aspect-video relative rounded-lg overflow-hidden"
+                  className={`overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-md p-0 ${
+                    selectedImage === image || (!selectedImage && index === 0)
+                      ? "ring-2 ring-primary"
+                      : ""
+                  }`}
+                  onClick={() => setSelectedImage(image)}
                 >
-                  <Image
-                    onClick={() => setSelectedImage(image)}
-                    src={image}
-                    alt={`${car.brand} ${car.model} - Image ${index + 2}`}
-                    fill
-                    className="object-cover hover:scale-105 transition-transform duration-200"
-                  />
-                </div>
+                  <div className="aspect-square relative">
+                    <Image
+                      src={image}
+                      alt={`${car.brand} ${car.model} - Image ${index + 1}`}
+                      fill
+                      className="object-cover hover:scale-105 transition-transform duration-200"
+                    />
+                  </div>
+                </Card>
               ))}
             </div>
-          </CardContent>
-        </Card>
-      )}
+          )}
+        </div>
+
+        {/* Right Side - Car Information */}
+        <div className="space-y-6">
+          <Card>
+            <CardHeader className="pb-4">
+              <div className="flex items-start justify-between">
+                <div>
+                  <Badge variant="outline" className="mb-3">
+                    {car.year}
+                  </Badge>
+                  <CardTitle className="text-3xl font-bold mb-2">
+                    {car.brand} {car.model}
+                  </CardTitle>
+                  <CardDescription className="text-2xl font-semibold text-primary flex items-center gap-2">
+                    <DollarSign className="h-5 w-5" />
+                    {car.price}/day
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+
+            <CardContent className="space-y-6">
+              {/* Description */}
+              <div>
+                <h3 className="font-semibold mb-3">Description</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  {car.description}
+                </p>
+              </div>
+
+              <Separator />
+
+              {/* Vehicle Features */}
+              <div>
+                <h3 className="font-semibold mb-4">Vehicle Features</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+                    <Car className="h-5 w-5 text-primary flex-shrink-0" />
+                    <div>
+                      <p className="text-sm font-medium">Type</p>
+                      <p className="text-sm text-muted-foreground capitalize">
+                        {car.type}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+                    <Users className="h-5 w-5 text-primary flex-shrink-0" />
+                    <div>
+                      <p className="text-sm font-medium">Passengers</p>
+                      <p className="text-sm text-muted-foreground">
+                        {car.seats}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+                    <Car className="h-5 w-5 text-primary flex-shrink-0" />
+                    <div>
+                      <p className="text-sm font-medium">Transmission</p>
+                      <p className="text-sm text-muted-foreground capitalize">
+                        {car.transmission}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+                    <Fuel className="h-5 w-5 text-primary flex-shrink-0" />
+                    <div>
+                      <p className="text-sm font-medium">Fuel Type</p>
+                      <p className="text-sm text-muted-foreground capitalize">
+                        {car.fuelType}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+                    <DoorOpen className="h-5 w-5 text-primary flex-shrink-0" />
+                    <div>
+                      <p className="text-sm font-medium">Doors</p>
+                      <p className="text-sm text-muted-foreground">
+                        {car.doors}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
+                    <DollarSign className="h-5 w-5 text-primary flex-shrink-0" />
+                    <div>
+                      <p className="text-sm font-medium">Insurance</p>
+                      <p className="text-sm text-muted-foreground">Included</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Booking Section */}
+              <div className="space-y-4">
+                <h3 className="font-semibold">Book This Vehicle</h3>
+                {/* Uncomment when ready to use */}
+                {/* <BookCarForm
+                  price={car.price}
+                  carId={car.id}
+                  bookings={car.bookings}
+                /> */}
+                <Modal children={<BookCarForm pricePerDay={car.price} />} />
+              </div>
+            </CardContent>
+            <div className="p-4 border-t"></div>
+          </Card>
+
+          {/* Additional Info Card */}
+          {activeBookings.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Current Availability</CardTitle>
+                <CardDescription>
+                  This vehicle has {activeBookings.length} active booking
+                  {activeBookings.length > 1 ? "s" : ""}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {activeBookings.slice(0, 3).map((booking, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-2 bg-muted/30 rounded"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        <span className="text-sm">Booking #{booking.id}</span>
+                      </div>
+                      <Badge className={getBookingStatusColor(booking.status)}>
+                        {booking.status}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

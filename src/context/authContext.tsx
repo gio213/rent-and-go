@@ -4,6 +4,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { get_current_user } from "@/actions/user.actions";
+import { usePathname } from "@/i18n/navigation";
 
 type User = Awaited<ReturnType<typeof get_current_user>>;
 
@@ -27,6 +28,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+
   const router = useRouter();
 
   useEffect(() => {

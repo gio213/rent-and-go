@@ -54,7 +54,7 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
   const locale = useLocale();
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 group">
+    <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 group p-0">
       {/* Image Section */}
       <div className="relative h-48 overflow-hidden">
         <img
@@ -121,7 +121,7 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
       </CardHeader>
 
       {/* Footer Actions */}
-      <CardFooter className="pt-4">
+      <CardFooter className="pt-4 p-2">
         <div className="flex gap-2 w-full">
           <Button variant="outline" size="sm" className="flex-1" asChild>
             <Link href={`${locale}/car-detail/${car.id}`}>
@@ -130,9 +130,11 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
             </Link>
           </Button>
           {isAvailable ? (
-            <Button size="sm" className="flex-1">
-              <Calendar className="w-4 h-4 mr-2" />
-              Book Now
+            <Button asChild size="sm" className="flex-1">
+              <Link href={`${locale}/car-detail/${car.id}`}>
+                <Calendar className="w-4 h-4 mr-2" />
+                Book Now
+              </Link>
             </Button>
           ) : (
             <Button size="sm" disabled className="flex-1">

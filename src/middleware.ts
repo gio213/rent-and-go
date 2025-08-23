@@ -9,18 +9,24 @@ const intlMiddleware = createIntlMiddleware(routing);
 
 export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
+  // Authentication check for protected routes
+  const token = req.cookies.get("token")?.value;
+  const decoded = token ? await verifyToken(token) : null;
 
   // Check if the pathname starts with a supported locale
   const pathnameIsMissingLocale = routing.locales.every(
     (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
   );
 
-  // Handle root path - redirect to default locale
-  // if (pathname === "/") {
-  //   return NextResponse.redirect(new URL(`/${routing.defaultLocale}`, req.url));
-  // }
-
-  // If pathname is missing locale, redirect to add default locale
+  if (
+    decoded &&
+    (pathname.startsWith(`/${routing.defaultLocale}/auth/login`) ||
+      pathname.startsWith(`/${routing.defaultLocale}/auth/register`))
+  ) {
+    return NextResponse.redirect(
+      new URL(`/${routing.defaultLocale}/`, req.url)
+    );
+  }
   if (
     pathnameIsMissingLocale &&
     !pathname.startsWith("/_next") &&
@@ -31,6 +37,13 @@ export async function middleware(req: NextRequest) {
     );
   }
 
+  // RBAC checks
+  if (pathname.includes("/admin") && decoded?.role !== "ADMIN") {
+    const localeMatch = pathname.match(/^\/([a-z]{2})\//);
+    const locale = localeMatch ? localeMatch[1] : routing.defaultLocale;
+    return NextResponse.redirect(new URL(`/${locale}/unauthorized`, req.url));
+  }
+
   // Handle internationalization for paths with locales
   const intlResponse = intlMiddleware(req);
   if (intlResponse) {
@@ -38,7 +51,11 @@ export async function middleware(req: NextRequest) {
   }
 
   // Public routes that don't require authentication
-  const publicRoutes = ["/auth/login", "/auth/register", "/unauthorized"];
+  const publicRoutes = [
+    `${routing.defaultLocale}/auth/login`,
+    `${routing.defaultLocale}/auth/register`,
+    `${routing.defaultLocale}/unauthorized`,
+  ];
   const isPublicRoute = publicRoutes.some(
     (route) =>
       pathname.includes(route) ||
@@ -50,9 +67,6 @@ export async function middleware(req: NextRequest) {
   if (isPublicRoute) {
     return NextResponse.next();
   }
-
-  // Authentication check for protected routes
-  const token = req.cookies.get("token")?.value;
 
   if (!token) {
     // Extract locale from pathname for redirect
@@ -76,13 +90,6 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(
         new URL(`/${routing.defaultLocale}/`, req.url)
       );
-    }
-
-    // RBAC checks
-    if (pathname.includes("/admin") && decoded.role !== "ADMIN") {
-      const localeMatch = pathname.match(/^\/([a-z]{2})\//);
-      const locale = localeMatch ? localeMatch[1] : routing.defaultLocale;
-      return NextResponse.redirect(new URL(`/${locale}/unauthorized`, req.url));
     }
 
     // Add additional role checks as needed

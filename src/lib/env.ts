@@ -10,7 +10,22 @@ export const env = createEnv({
     BLOB_READ_WRITE_TOKEN: z.string().min(1, {
       message: "BLOB_READ_WRITE_TOKEN is required",
     }),
+    STRIPE_PUBLISHABLE_KEY: z.string().min(1, {
+      message: "STRIPE_PUBLISHABLE_KEY is required",
+    }),
+    STRIPE_SECRET_KEY: z.string().min(1, {
+      message: "STRIPE_SECRET_KEY is required",
+    }),
+    STRIPE_WEBHOOK_SECRET: z.string().min(1, {
+      message: "STRIPE_WEBHOOK_SECRET is required",
+    }),
   },
-  client: {},
-  experimental__runtimeEnv: {},
+  client: {
+    NEXT_PUBLIC_BASE_URL: z.url().min(1, {
+      message: "NEXT_PUBLIC_BASE_URL is required",
+    }),
+  },
+  experimental__runtimeEnv: {
+    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+  },
 });
