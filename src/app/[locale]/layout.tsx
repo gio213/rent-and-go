@@ -75,6 +75,7 @@ export default async function RootLayout({
                 {children}
                 <Toaster />
               </PageWrapper>
+
               <Footer />
             </AuthProvider>
           </NextIntlClientProvider>

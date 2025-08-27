@@ -23,9 +23,9 @@ import {
   Users,
 } from "lucide-react";
 import Image from "next/image";
-import BookCar from "./BookCar";
 import BookCarForm from "./BookCar";
 import { Modal } from "./Modal";
+import { nextDay } from "date-fns";
 
 type CarDetail = Awaited<ReturnType<typeof car_details>>;
 
@@ -66,6 +66,24 @@ const CarDetailComponent = ({ car }: { car: CarDetail }) => {
         return "bg-gray-100 text-gray-800";
     }
   };
+
+  // prepare booking data for BookCarForm
+
+  const bookData = {
+    carId: car.id,
+    pricePerDay: car.price,
+    carName: car.brand,
+    carModel: car.model,
+    carImage: car.image[0],
+  };
+
+  const lastBooking = car.bookings.reduce((latest, booking) => {
+    const latestStartDate = latest.startDate || new Date(0);
+    const bookingStartDate = booking.startDate || nextDay;
+
+    return bookingStartDate > latestStartDate ? booking : latest;
+  }, {} as (typeof car.bookings)[number]);
+  console.log("lastBooking", lastBooking);
 
   return (
     <div className="max-w-7xl mx-auto p-4 lg:p-6">
@@ -216,50 +234,19 @@ const CarDetailComponent = ({ car }: { car: CarDetail }) => {
               <Separator />
 
               {/* Booking Section */}
-              <div className="space-y-4">
+              <div className="space-y-4 ">
                 <h3 className="font-semibold">Book This Vehicle</h3>
-                {/* Uncomment when ready to use */}
-                {/* <BookCarForm
-                  price={car.price}
-                  carId={car.id}
-                  bookings={car.bookings}
-                /> */}
-                <Modal children={<BookCarForm pricePerDay={car.price} />} />
+                <Modal className="max-w-3xl" key={lastBooking.id}>
+                  <BookCarForm
+                    bookData={bookData}
+                    initialStartDate={lastBooking.startDate}
+                    initialEndDate={lastBooking.endDate}
+                  />
+                </Modal>
               </div>
             </CardContent>
             <div className="p-4 border-t"></div>
           </Card>
-
-          {/* Additional Info Card */}
-          {activeBookings.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Current Availability</CardTitle>
-                <CardDescription>
-                  This vehicle has {activeBookings.length} active booking
-                  {activeBookings.length > 1 ? "s" : ""}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {activeBookings.slice(0, 3).map((booking, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between p-2 bg-muted/30 rounded"
-                    >
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm">Booking #{booking.id}</span>
-                      </div>
-                      <Badge className={getBookingStatusColor(booking.status)}>
-                        {booking.status}
-                      </Badge>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
         </div>
       </div>
     </div>

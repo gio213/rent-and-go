@@ -1,14 +1,24 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Lenis from "@studio-freight/lenis";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
+interface SmoothScrollProps {
+  disabled?: boolean;
+}
 
-export default function SmoothScroll() {
+export default function SmoothScroll({ disabled = false }: SmoothScrollProps) {
+  const lenisRef = useRef<Lenis | null>(null);
+
   useEffect(() => {
-    const lenis = new Lenis();
+    if (disabled) return;
+
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
+
+    lenisRef.current = lenis;
 
     function raf(time: number) {
       lenis.raf(time);
@@ -16,16 +26,21 @@ export default function SmoothScroll() {
     }
     requestAnimationFrame(raf);
 
-    lenis.on("scroll", ScrollTrigger.update);
-
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000);
-    });
-
     return () => {
-      gsap.ticker.remove(() => {});
+      lenis.destroy();
     };
-  }, []);
+  }, [disabled]);
+
+  // Method to disable/enable from outside
+  useEffect(() => {
+    if (lenisRef.current) {
+      if (disabled) {
+        lenisRef.current.stop();
+      } else {
+        lenisRef.current.start();
+      }
+    }
+  }, [disabled]);
 
   return null;
 }

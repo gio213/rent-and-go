@@ -3,9 +3,11 @@ import { z } from "zod";
 // Alternative approach with more detailed validation
 export const BookCarValidationSchemaDetailed = z
   .object({
-    userId: z.string().min(1, "User ID is required"),
     carId: z.string().min(1, "Car ID is required"),
-
+    carImage: z.url().optional(),
+    pricePerDay: z.number().min(0, "Price per day must be a positive number"),
+    carName: z.string().min(1, "Car name is required"),
+    carModel: z.string().min(1, "Car model is required"),
     startDate: z
       .date()
       .refine(
@@ -35,9 +37,6 @@ export const BookCarValidationSchemaDetailed = z
       ),
 
     endDate: z.date(),
-
-    totalPrice: z.number().min(0, "Total price must be a positive number"),
-    durationDays: z.number().min(1, "Duration must be at least 1 day"),
   })
   .refine(
     (data) => {

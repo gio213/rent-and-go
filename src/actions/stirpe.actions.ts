@@ -5,22 +5,21 @@ import { stripe } from "@/lib/stripe";
 import { get_current_user } from "./user.actions";
 import type Stripe from "stripe";
 import { getLocale } from "next-intl/server";
+import { BookCarFormDataDetailedType } from "@/validation/book-car-validation";
+import { differenceInDays } from "date-fns";
 
 type CreateCheckoutResult =
   | { success: true; url: string }
   | { success: false; error: string };
 
 export async function create_stripe_checkout_session(
-  price: number,
-  car: string,
-  model: string,
-  totalDays: number,
-  carId: string
+  stripe_session_data: BookCarFormDataDetailedType
 ): Promise<CreateCheckoutResult> {
   try {
     // 1) იუზერი უნდა იყოს ავტორიზებული
     const user = await get_current_user();
     const locale = await getLocale();
+
     if (!user?.id) {
       return { success: false, error: "NOT_AUTHENTICATED" };
     }
@@ -30,8 +29,20 @@ export async function create_stripe_checkout_session(
       return { success: false, error: "BASE_URL_MISSING" };
     }
 
+    if (!stripe_session_data) {
+      return { success: false, error: "NO_SESSION_DATA" };
+    }
+    // 3 დღეების რაოდენობა
+    const durationDays = differenceInDays(
+      stripe_session_data.endDate,
+      stripe_session_data.startDate
+    );
+
+    // 3 თანხის დათვლა დღეებზე
+    const totalPrice = stripe_session_data.pricePerDay * durationDays;
+
     // 3) თანხა ცენტებში (მთელი რიცხვი)
-    const unitAmount = Math.round(Number(price) * 100);
+    const unitAmount = Math.round(totalPrice * 100);
     if (!Number.isFinite(unitAmount) || unitAmount <= 0) {
       return { success: false, error: "INVALID_PRICE" };
     }
@@ -46,9 +57,9 @@ export async function create_stripe_checkout_session(
             currency: "usd",
             unit_amount: unitAmount,
             product_data: {
-              name: `Booking for ${car} ${model}`,
-              description: `Booking for ${car} ${model} for ${totalDays} days`,
-              images: [`${env.NEXT_PUBLIC_BASE_URL}/${locale}/assets/logo.svg`],
+              name: `Booking for ${stripe_session_data.carName} ${stripe_session_data.carModel}`,
+              description: `Booking for ${stripe_session_data.carName} ${stripe_session_data.carModel} for ${durationDays} days`,
+              images: [`${stripe_session_data.carImage}`],
             },
           },
           quantity: 1,
@@ -56,14 +67,17 @@ export async function create_stripe_checkout_session(
       ],
       // metadata მხოლოდ სტრინგებს იღებს
       metadata: {
-        carId: String(carId ?? ""),
+        carId: String(stripe_session_data.carId ?? ""),
         userId: String(user.id),
-        totalDays: String(totalDays),
-        car: String(car),
-        model: String(model ?? ""),
+        totalDays: String(durationDays),
+        car: String(stripe_session_data.carName),
+        model: String(stripe_session_data.carModel ?? ""),
+        startDate: String(stripe_session_data.startDate.toISOString()),
+        endDate: String(stripe_session_data.endDate.toISOString()),
+        totalPrice: String(totalPrice.toFixed(0)), // ანთწილადების მოშორება
       },
-      success_url: `${env.NEXT_PUBLIC_BASE_URL}/${locale}/my-bookings/`,
-      cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/${locale}/car-detail/${carId}`,
+      success_url: `${env.NEXT_PUBLIC_BASE_URL}/${locale}/my-bookings/success/${stripe_session_data.carId}`,
+      cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/${locale}/car-detail/${stripe_session_data.carId}`,
       custom_text: {
         terms_of_service_acceptance: {
           message: `I have read Rent and Drives [Terms of Service](${env.NEXT_PUBLIC_BASE_URL}/tos) and agree to the terms and conditions.`,
@@ -75,6 +89,8 @@ export async function create_stripe_checkout_session(
     if (!session.url) {
       return { success: false, error: "NO_SESSION_URL" };
     }
+
+    // console.log("Session created successfully:", stripe_session_data);
 
     return { success: true, url: session.url };
   } catch (err: any) {
