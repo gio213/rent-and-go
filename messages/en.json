@@ -6,6 +6,7 @@
     "Book Now": "Book Now",
     "Contact": "Contact",
     "My Bookings": "My Bookings",
+    "my bookings": "My Bookings",
     "Login": "Login"
   },
   "LoginPage": {
@@ -53,7 +54,8 @@
     "profile": "Profile",
     "list of cars": "List of Cars",
     "add card": "Add Car",
-    "logout": "Logout"
+    "logout": "Logout",
+    "My Bookings": "My Bookings"
   },
   "AddCarForm": {
     "title": "Add New Car",

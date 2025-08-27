@@ -26,11 +26,15 @@ import Link from "next/link";
 import { login_user } from "@/actions/user.actions";
 import { toast } from "sonner";
 import { useLocale, useTranslations } from "next-intl";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = React.useState(false);
   const t = useTranslations("LoginPage");
   const locale = useLocale();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const returnUrl = searchParams?.get("returnUrl");
 
   const form = useForm<LoginSchemaType>({
     resolver: zodResolver(LoginSchema),
@@ -47,7 +51,15 @@ const LoginForm = () => {
       loading: "Logging in...",
       success: (result) => {
         form.reset();
-        window.location.href = "/";
+
+        // If a returnUrl query param was provided, navigate there (safe check).
+        if (returnUrl && returnUrl.startsWith("/")) {
+          // replace so login page is not kept in history
+          window.location.replace(returnUrl);
+        } else {
+          window.location.replace(`/${locale}/`);
+        }
+
         return result.message;
       },
       error: (error) => {

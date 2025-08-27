@@ -13,6 +13,10 @@ import {
   CheckCircle,
   AlertCircle,
 } from "lucide-react";
+import { useAuth } from "@/context/authContext";
+import Link from "next/link";
+import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 
 type BookCarProps = {
   bookData: Omit<BookCarFormDataDetailedType, "startDate" | "endDate">;
@@ -25,6 +29,8 @@ const BookCar = ({
   initialStartDate,
   initialEndDate,
 }: BookCarProps) => {
+  const { user } = useAuth();
+
   // Determine the minimum selectable date
   const getMinimumDate = () => {
     // If we have initial dates, start from the initial end date
@@ -79,6 +85,7 @@ const BookCar = ({
   const [bookingStep, setBookingStep] = React.useState<
     "selecting" | "confirmed" | "processing"
   >("selecting");
+  const locale = useLocale();
 
   React.useEffect(() => {
     if (startDate && endDate && isValid(startDate) && isValid(endDate)) {
@@ -126,6 +133,8 @@ const BookCar = ({
     }
   };
 
+  const router = useRouter();
+
   const bookDataForStripe: BookCarFormDataDetailedType = {
     ...bookData,
     startDate,
@@ -137,6 +146,17 @@ const BookCar = ({
     setBookingStep("processing");
 
     try {
+      if (!user) {
+        // Preserve current path and query so user returns after login
+        try {
+          const returnUrl = window.location.pathname + window.location.search;
+          return router.push(
+            `/${locale}/auth/login?returnUrl=${encodeURIComponent(returnUrl)}`
+          );
+        } catch (e) {
+          return router.push(`/${locale}/auth/login`);
+        }
+      }
       const res = await create_stripe_checkout_session(bookDataForStripe);
 
       if (res?.success && res.url) {
@@ -356,17 +376,22 @@ const BookCar = ({
       <Button
         className="w-full py-3 text-base font-medium transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
         onClick={handleSubmit}
-        disabled={isValidSelection || isLoading}
+        disabled={!isValidSelection || isLoading}
         variant="default"
       >
-        {isLoading ? (
+        {/* {isLoading ? (
           <div className="flex items-center gap-2">
             <div className="animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full"></div>
             Processing...
           </div>
         ) : (
           `Proceed to Payment • $${totalPrice.toLocaleString()}`
-        )}
+        )} */}
+        {!user
+          ? "Login to Book"
+          : isLoading
+          ? "Processing..."
+          : `Proceed to Payment • $${totalPrice.toLocaleString()}`}
       </Button>
 
       {/* Additional Info */}

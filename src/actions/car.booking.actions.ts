@@ -1,29 +1,24 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import {
-  BookCarFormData,
-  BookCarValidationSchemaDetailed,
-} from "@/validation/book-car-validation";
+import { get_current_user } from "./user.actions";
 
-export const book_car = async (bookingData: BookCarFormData) => {
-  const parsedData = BookCarValidationSchemaDetailed.safeParse(bookingData);
-  if (!parsedData.success) {
-    throw new Error("Invalid booking data");
-  }
-
+export const get_user_booking = async () => {
   try {
-    await prisma.booking.create({
-      data: {
-        ...parsedData.data,
-      },
+    const user = await get_current_user();
+
+    if (!user) {
+      return { success: false, message: "User not found" };
+    }
+
+    const bookings = await prisma.booking.findMany({
+      where: { userId: user.id },
+      include: { car: true },
+      orderBy: { startDate: "desc" },
     });
-    return {
-      success: true,
-      message: "Car booked successfully",
-    };
+    return {  bookings };
   } catch (error) {
     console.error(error);
-    throw new Error("Failed to book car. Please try again.");
+    return { success: false, message: "Error fetching bookings" };
   }
 };

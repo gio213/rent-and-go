@@ -17,6 +17,7 @@ import {
   Building2,
   CirclePlus,
   Car,
+  Calendar,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
@@ -107,12 +108,20 @@ const UserProfile = () => {
                 </DropdownMenuItem>
               )}
               {dbUser?.role === "USER" && (
-                <DropdownMenuItem className="cursor-pointer">
-                  <User className="mr-2 h-4 w-4" />
-                  <Link href={`/${locale}/my-profile`}>
-                    <span>{t("profile")}</span>
-                  </Link>
-                </DropdownMenuItem>
+                <>
+                  <DropdownMenuItem className="cursor-pointer">
+                    <User className="mr-2 h-4 w-4" />
+                    <Link href={`/${locale}/my-profile`}>
+                      <span>{t("profile")}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer">
+                    <Calendar className="mr-2 h-4 w-4" />
+                    <Link href={`/${locale}/my-bookings`}>
+                      <span>{t("My Bookings")}</span>
+                    </Link>
+                  </DropdownMenuItem>
+                </>
               )}
 
               {dbUser?.role === "ADMIN" && (
