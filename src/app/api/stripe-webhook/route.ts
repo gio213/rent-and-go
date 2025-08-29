@@ -28,6 +28,8 @@ export async function POST(req: Request) {
   // (Optional) Idempotency guard if your handler isn’t idempotent:
   // e.g., check event.id in your DB before processing
 
+  console.log("stripe event id:", event.id, "type:", event.type);
+
   try {
     switch (event.type) {
       case "payment_intent.succeeded": {
@@ -52,17 +54,50 @@ export async function POST(req: Request) {
           endDate = endDate || session?.metadata?.endDate!;
           console.log("found session metadata", session?.metadata);
           console.log("endDate from webhook", endDate);
-          await prisma.booking.create({
-            data: {
-              user: { connect: { id: session?.metadata?.userId! } },
-              car: { connect: { id: session?.metadata?.carId! } },
-              paid: true,
-              startDate: new Date(startDate),
-              endDate: new Date(endDate),
-              durationDays: parseInt(session?.metadata?.totalDays!),
-              totalPrice: parseFloat(session?.metadata?.totalPrice!),
+          // Try to avoid duplicate bookings: if a booking already exists for
+          // the same user/car/start/end, update it to CONFIRMED instead of creating a new one.
+          const userId = session?.metadata?.userId!;
+          const carId = session?.metadata?.carId!;
+          const parsedStart = new Date(startDate);
+          const parsedEnd = new Date(endDate);
+
+          const existing = await prisma.booking.findFirst({
+            where: {
+              userId,
+              carId,
+              startDate: parsedStart,
+              endDate: parsedEnd,
             },
           });
+
+          if (existing) {
+            console.log(
+              "Found existing booking, updating to CONFIRMED",
+              existing.id
+            );
+            await prisma.booking.update({
+              where: { id: existing.id },
+              data: {
+                paid: true,
+                totalPrice: parseFloat(session?.metadata?.totalPrice!),
+                durationDays: parseInt(session?.metadata?.totalDays!),
+                status: "CONFIRMED",
+              },
+            });
+          } else {
+            await prisma.booking.create({
+              data: {
+                user: { connect: { id: userId } },
+                car: { connect: { id: carId } },
+                paid: true,
+                startDate: parsedStart,
+                endDate: parsedEnd,
+                durationDays: parseInt(session?.metadata?.totalDays!),
+                totalPrice: parseFloat(session?.metadata?.totalPrice!),
+                status: "CONFIRMED",
+              },
+            });
+          }
         }
 
         console.log("startDate from webhook", startDate);

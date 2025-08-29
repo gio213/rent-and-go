@@ -49,19 +49,19 @@ export const footerLinks: FooterLink[] = [
 
 export const socialLinks: SocialLink[] = [
   {
-    href: "https://github.com/yourusername",
+    href: "https://github.com/gio213",
     label: "GitHub",
     icon: Github,
     external: true,
   },
   {
-    href: "mailto:youremail@example.com",
+    href: "mailto:gio.patsia@gmail.com",
     label: "Email",
     icon: Mail,
     external: true,
   },
   {
-    href: "https://linkedin.com/in/yourusername",
+    href: "https://www.linkedin.com/in/giorgi-patsia/",
     label: "LinkedIn",
     icon: Linkedin,
     external: true,

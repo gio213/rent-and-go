@@ -4,7 +4,13 @@ import { Button } from "./ui/button";
 import { DateRange } from "react-day-picker";
 import { create_stripe_checkout_session } from "@/actions/stirpe.actions";
 import { BookCarFormDataDetailedType } from "@/validation/book-car-validation";
-import { differenceInDays, format, isValid, addDays } from "date-fns";
+import {
+  differenceInDays,
+  format,
+  isValid,
+  addDays,
+  startOfDay,
+} from "date-fns";
 import {
   CalendarIcon,
   Clock,
@@ -40,10 +46,11 @@ const BookCar = ({
       isValid(initialStartDate) &&
       isValid(initialEndDate)
     ) {
-      return initialEndDate;
+      // Use startOfDay to normalize the date and avoid time comparison issues
+      return startOfDay(initialEndDate);
     }
     // Otherwise, start from current date
-    return new Date();
+    return startOfDay(new Date());
   };
 
   const minimumDate = getMinimumDate();
@@ -57,10 +64,10 @@ const BookCar = ({
       isValid(initialEndDate)
     ) {
       // If we have initial booking dates, new booking starts from the initial end date
-      return initialEndDate;
+      return startOfDay(initialEndDate);
     }
     // For new bookings, start from current date
-    return new Date();
+    return startOfDay(new Date());
   };
 
   const getInitialEndDate = () => {
@@ -71,10 +78,10 @@ const BookCar = ({
       isValid(initialEndDate)
     ) {
       // If we have initial booking dates, default end date is one day after initial end date
-      return addDays(initialEndDate, 1);
+      return startOfDay(addDays(initialEndDate, 1));
     }
     // For new bookings, default end date is one day after start date
-    return addDays(new Date(), 1);
+    return startOfDay(addDays(new Date(), 1));
   };
 
   const [startDate, setStartDate] = React.useState<Date>(getInitialStartDate());
@@ -112,8 +119,10 @@ const BookCar = ({
       return;
     }
 
+    // Normalize dates to avoid time comparison issues
+    let newStartDate = startOfDay(range.from);
+
     // Ensure start date is not before minimum date
-    let newStartDate = range.from;
     if (newStartDate < minimumDate) {
       newStartDate = minimumDate;
     }
@@ -122,7 +131,7 @@ const BookCar = ({
 
     if (range.to) {
       // Ensure end date is after start date
-      let newEndDate = range.to;
+      let newEndDate = startOfDay(range.to);
       if (newEndDate <= newStartDate) {
         newEndDate = addDays(newStartDate, 1);
       }
@@ -192,15 +201,28 @@ const BookCar = ({
     }
   };
 
+  // Fixed validation logic - normalize dates for comparison
   const isValidSelection =
     startDate &&
     endDate &&
     isValid(startDate) &&
     isValid(endDate) &&
     durationDays >= 1 &&
-    startDate >= minimumDate;
+    startOfDay(startDate).getTime() >= minimumDate.getTime();
 
-  console.log("Valid selection:", isValidSelection);
+  // Debug logging (remove this in production)
+  console.log("Booking validation debug:", {
+    startDate: startDate?.toISOString(),
+    endDate: endDate?.toISOString(),
+    minimumDate: minimumDate.toISOString(),
+    durationDays,
+    isValidSelection,
+    hasInitialDates: !!(initialStartDate && initialEndDate),
+    startDateNormalized: startOfDay(startDate || new Date()).getTime(),
+    minimumDateNormalized: minimumDate.getTime(),
+    dateComparison:
+      startOfDay(startDate || new Date()).getTime() >= minimumDate.getTime(),
+  });
 
   // Check if this is extending an existing booking
   const isExtendingBooking =
@@ -293,7 +315,7 @@ const BookCar = ({
             mode="range"
             selected={selectedRange}
             onSelect={handleDateSelect}
-            disabled={(date) => date < minimumDate}
+            disabled={(date) => startOfDay(date) < minimumDate}
             defaultMonth={minimumDate} // Calendar opens on the month of minimum date
             today={new Date()} // Mark current date
             numberOfMonths={2}
@@ -379,14 +401,6 @@ const BookCar = ({
         disabled={!isValidSelection || isLoading}
         variant="default"
       >
-        {/* {isLoading ? (
-          <div className="flex items-center gap-2">
-            <div className="animate-spin w-4 h-4 border-2 border-current border-t-transparent rounded-full"></div>
-            Processing...
-          </div>
-        ) : (
-          `Proceed to Payment • $${totalPrice.toLocaleString()}`
-        )} */}
         {!user
           ? "Login to Book"
           : isLoading

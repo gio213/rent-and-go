@@ -14,9 +14,9 @@ export const get_user_booking = async () => {
     const bookings = await prisma.booking.findMany({
       where: { userId: user.id },
       include: { car: true },
-      orderBy: { startDate: "desc" },
+      orderBy: { createdAt: "desc" },
     });
-    return {  bookings };
+    return { bookings };
   } catch (error) {
     console.error(error);
     return { success: false, message: "Error fetching bookings" };
