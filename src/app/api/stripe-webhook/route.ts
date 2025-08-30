@@ -3,8 +3,6 @@ import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 import Stripe from "stripe";
 
-// ❗ Put this in your env and ROTATE the secret you pasted above
-
 const endpointSecret = env.STRIPE_WEBHOOK_SECRET;
 
 // Ensure this route is always dynamic (no caching)
@@ -63,10 +61,7 @@ export async function POST(req: Request) {
 
           const existing = await prisma.booking.findFirst({
             where: {
-              userId,
-              carId,
-              startDate: parsedStart,
-              endDate: parsedEnd,
+              stripeSessionId: session?.id,
             },
           });
 
@@ -76,7 +71,7 @@ export async function POST(req: Request) {
               existing.id
             );
             await prisma.booking.update({
-              where: { id: existing.id },
+              where: { id: existing.id, stripeSessionId: session?.id },
               data: {
                 paid: true,
                 totalPrice: parseFloat(session?.metadata?.totalPrice!),
@@ -95,6 +90,8 @@ export async function POST(req: Request) {
                 durationDays: parseInt(session?.metadata?.totalDays!),
                 totalPrice: parseFloat(session?.metadata?.totalPrice!),
                 status: "CONFIRMED",
+                stripeSessionId: session?.id,
+                stripePaymentIntentId: pi.id,
               },
             });
           }

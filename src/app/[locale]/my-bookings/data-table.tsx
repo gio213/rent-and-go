@@ -6,7 +6,6 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -14,10 +13,12 @@ import {
 import { useLocale } from "next-intl";
 import Link from "next/link";
 import NoBookings from "./NoBookings";
+import { use, useEffect, useState } from "react";
 
 export type Bookings = Awaited<ReturnType<typeof get_user_booking>>;
 
 export function BookingsTable({ bookings }: { bookings: Bookings }) {
+  const [loadingImg, setLoadingImg] = useState<boolean>(false);
   // Calculate total amount for footer
   const totalAmount =
     bookings.bookings?.reduce((sum, booking) => sum + booking.totalPrice, 0) ||
@@ -28,6 +29,12 @@ export function BookingsTable({ bookings }: { bookings: Bookings }) {
   if (!bookings.bookings || bookings.bookings.length === 0) {
     return <NoBookings />;
   }
+
+  useEffect(() => {
+    setLoadingImg(true);
+    const t = setTimeout(() => setLoadingImg(false), 2000);
+    return () => clearTimeout(t);
+  }, []);
 
   return (
     <Table>
@@ -63,6 +70,7 @@ export function BookingsTable({ bookings }: { bookings: Bookings }) {
                 trigger={booking.car.brand}
                 imageSrc={booking.car.image[0]}
                 imageAlt={booking.car.brand}
+                loading={loadingImg}
               />
             </TableCell>
             <TableCell>{booking.car.model}</TableCell>

@@ -90,6 +90,10 @@ export const list_cars = async () => {
       },
     });
 
+    if (cars.length === 0) {
+      console.warn("No cars found");
+    }
+
     return cars;
   } catch (error) {
     console.error(error);

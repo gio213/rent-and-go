@@ -22,17 +22,6 @@ interface CarCardProps {
 const CarCard: React.FC<CarCardProps> = ({ car }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Calculate availability
-  const activeBookings = car.bookings.filter(
-    (booking) => booking.status === "CONFIRMED"
-  ).length;
-  const isAvailable = activeBookings === 0;
-
-  const getStatusText = () => {
-    if (isAvailable) return "Available";
-    return "Booked";
-  };
-
   // Image navigation
   const nextImage = () => {
     if (car.image.length > 1) {
@@ -129,18 +118,13 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
               View Details
             </Link>
           </Button>
-          {isAvailable ? (
-            <Button asChild size="sm" className="flex-1">
-              <Link href={`${locale}/car-detail/${car.id}`}>
-                <Calendar className="w-4 h-4 mr-2" />
-                Book Now
-              </Link>
-            </Button>
-          ) : (
-            <Button size="sm" disabled className="flex-1">
-              Currently Booked
-            </Button>
-          )}
+
+          <Button asChild size="sm" className="flex-1">
+            <Link href={`${locale}/car-detail/${car.id}`}>
+              <Calendar className="w-4 h-4 mr-2" />
+              Book Now
+            </Link>
+          </Button>
         </div>
       </CardFooter>
     </Card>

@@ -4,30 +4,9 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-enum Role {
-  USER
-  ADMIN
-}
-
-enum CarType {
-  SEDAN
-  SUV
-  TRUCK
-  COUPE
-  CONVERTIBLE
-  HATCHBACK
-  MINIVAN
-  WAGON
-}
-
-enum BookingStatus {
-  PENDING
-  CONFIRMED
-  CANCELLED
-}
-
 generator client {
   provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -70,21 +49,44 @@ model CarForRent {
 }
 
 model Booking {
-  id           String        @id @default(cuid())
-  userId       String
-  carId        String
-  paid         Boolean       @default(false)
-  startDate    DateTime
-  endDate      DateTime
-  durationDays Int
-  totalPrice   Float
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  status       BookingStatus @default(PENDING)
-
-  user User       @relation(fields: [userId], references: [id])
-  car  CarForRent @relation(fields: [carId], references: [id])
+  id                    String        @id @default(cuid())
+  userId                String
+  carId                 String
+  paid                  Boolean       @default(false)
+  startDate             DateTime
+  endDate               DateTime
+  durationDays          Int
+  totalPrice            Float
+  stripeSessionId       String        @unique
+  stripePaymentIntentId String        @unique
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  status                BookingStatus @default(PENDING)
+  car                   CarForRent    @relation(fields: [carId], references: [id])
+  user                  User          @relation(fields: [userId], references: [id])
 
   @@index([carId])
   @@map("bookings")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum CarType {
+  SEDAN
+  SUV
+  TRUCK
+  COUPE
+  CONVERTIBLE
+  HATCHBACK
+  MINIVAN
+  WAGON
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
 }
