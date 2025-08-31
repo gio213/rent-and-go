@@ -61,7 +61,7 @@ export function Modal({
           </DialogHeader>
 
           {/* Content container with proper spacing */}
-          <div className={cn("flex-1 overflow-y-auto")}>{children}</div>
+          <div className={cn("flex-1 overflow-y-auto p-5")}>{children}</div>
 
           <DialogFooter className="pt-4 mt-6 border-t">
             <DialogClose asChild>

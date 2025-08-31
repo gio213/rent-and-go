@@ -42,7 +42,7 @@ export function SearchResults() {
       </div>
 
       {/* Scrollable results area */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto ">
         {isLoading ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="animate-spin h-6 w-6" />
