@@ -6,6 +6,7 @@ import { MobileNavs } from "./MobileNavItems";
 import Logo from "./Logo";
 import LocaleSwitcher from "./LocaleSwitcher";
 import UserProfile from "./UserProfile";
+import SearchComponent from "./SearchComponent";
 
 interface HeaderProps {
   className?: string;
@@ -30,10 +31,7 @@ const Header: React.FC<HeaderProps> = ({ className = "" }) => {
             <NavItems />
           </div>
 
-          {/* Mobile Navigation */}
-          <div className="md:hidden flex-1 flex justify-center">
-            <MobileNavs />
-          </div>
+          <SearchComponent />
 
           <Separator
             orientation="vertical"
@@ -43,11 +41,15 @@ const Header: React.FC<HeaderProps> = ({ className = "" }) => {
           {/* Right Section - Actions */}
           <div className="flex items-center gap-2 flex-shrink-0">
             <UserProfile />
-            <div className="flex items-center min-w-[80px] justify-center">
+            <div className=" hidden md:flex items-center min-w-[80px] justify-center">
               <LocaleSwitcher />
             </div>
-            <div className="flex items-center">
+            <div className=" hidden md:flex items-center">
               <ModeToggle />
+            </div>
+            {/* Mobile Navigation */}
+            <div className="md:hidden flex-1 flex justify-center">
+              <MobileNavs />
             </div>
           </div>
         </div>

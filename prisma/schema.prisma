@@ -45,6 +45,7 @@ model CarForRent {
   updatedAt    DateTime  @updatedAt
   bookings     Booking[]
 
+  @@index([type])
   @@map("cars_for_rent")
 }
 

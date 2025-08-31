@@ -12,6 +12,7 @@ import {
 import { list_cars } from "@/actions/car.actions";
 import Link from "next/link";
 import { useLocale } from "next-intl";
+import Image from "next/image";
 
 type CarType = Awaited<ReturnType<typeof list_cars>>[number];
 
@@ -46,8 +47,10 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 group p-0">
       {/* Image Section */}
       <div className="relative h-48 overflow-hidden">
-        <img
+        <Image
           src={currentImage}
+          width={400}
+          height={300}
           alt={`${car.brand} ${car.model}`}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
@@ -91,7 +94,7 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <h3 className="text-xl font-bold truncate">
+            <h3 className="text-xl font-bold truncate text-shadow-xs">
               {car.brand} {car.model}
             </h3>
             <div className="flex items-center gap-2 mt-1">

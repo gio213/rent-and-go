@@ -13,6 +13,8 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { getMessages } from "next-intl/server";
 import { AuthProvider } from "@/context/authContext";
+import SearchProvider, { useSearch } from "@/context/search-context";
+import { SearchResults } from "@/components/SearchResult";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -61,25 +63,27 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${montserrat.variable} antialiased font-montserrat`}
       >
-        <ThemeProvider
-          defaultTheme="system"
-          attribute={"class"}
-          enableSystem
-          disableTransitionOnChange
-        >
-          <NextIntlClientProvider messages={messages}>
-            <AuthProvider>
-              <Header />
-              <SmoothScroll />
-              <PageWrapper className="min-h-screen w-full">
-                {children}
-                <Toaster />
-              </PageWrapper>
+        <SearchProvider>
+          <ThemeProvider
+            defaultTheme="system"
+            attribute={"class"}
+            enableSystem
+            disableTransitionOnChange
+          >
+            <NextIntlClientProvider messages={messages}>
+              <AuthProvider>
+                <Header />
+                <SmoothScroll />
+                <PageWrapper className="min-h-screen w-full">
+                  {children}
+                  <Toaster />
+                </PageWrapper>
 
-              <Footer />
-            </AuthProvider>
-          </NextIntlClientProvider>
-        </ThemeProvider>
+                <Footer />
+              </AuthProvider>
+            </NextIntlClientProvider>
+          </ThemeProvider>
+        </SearchProvider>
         <Analytics />
       </body>
     </html>

@@ -1,4 +1,4 @@
-import { Home, Info, Car, Phone, Calendar, User } from "lucide-react";
+import { Home, Info, Car, Phone } from "lucide-react";
 
 type NavItem = {
   href: string;
@@ -22,11 +22,7 @@ export const navItems: NavItem[] = [
     label: "Cars",
     icon: <Car />,
   },
-  {
-    href: "/book",
-    label: "Book Now",
-    icon: <Calendar />,
-  },
+
   {
     href: "/contact",
     label: "Contact",

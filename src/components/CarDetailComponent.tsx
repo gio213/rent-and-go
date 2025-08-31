@@ -236,7 +236,11 @@ const CarDetailComponent = ({ car }: { car: CarDetail }) => {
               {/* Booking Section */}
               <div className="space-y-4 ">
                 <h3 className="font-semibold">Book This Vehicle</h3>
-                <Modal className="max-w-3xl" key={lastBooking.id}>
+                <Modal
+                  type="booking"
+                  className="max-w-3xl"
+                  key={lastBooking.id}
+                >
                   <BookCarForm
                     bookData={bookData}
                     initialStartDate={lastBooking.startDate}

@@ -131,3 +131,55 @@ export const car_details = async (carId: string) => {
     throw new Error("Failed to retrieve car details");
   }
 };
+
+export const search_car = async (query: string) => {
+  try {
+    if (!query) {
+      throw new Error("Search query is required");
+    }
+    const q = query.trim();
+
+    // Map free-text to CarType enum values (case-insensitive, ignores spaces/dashes)
+    const normalize = (s: string) => s.replace(/[\s_-]/g, "").toUpperCase();
+    const tokens = q.split(/\s+/).map(normalize);
+    const carTypeMap: Record<string, string> = {
+      SEDAN: "SEDAN",
+      SUV: "SUV",
+      TRUCK: "TRUCK",
+      COUPE: "COUPE",
+      CONVERTIBLE: "CONVERTIBLE",
+      HATCHBACK: "HATCHBACK",
+      MINIVAN: "MINIVAN",
+      WAGON: "WAGON",
+    };
+    const normalizedToCanonical = Object.fromEntries(
+      Object.keys(carTypeMap).map((k) => [normalize(k), carTypeMap[k]])
+    ) as Record<string, string>;
+
+    const matchedTypes = new Set<string>();
+    for (const t of tokens) {
+      const match = normalizedToCanonical[t];
+      if (match) matchedTypes.add(match);
+    }
+
+    const orConditions: any[] = [
+      { brand: { contains: q, mode: "insensitive" } },
+      { model: { contains: q, mode: "insensitive" } },
+      { description: { contains: q, mode: "insensitive" } },
+      { fuelType: { contains: q, mode: "insensitive" } },
+      { transmission: { contains: q, mode: "insensitive" } },
+    ];
+
+    if (matchedTypes.size > 0) {
+      orConditions.push({ type: { in: Array.from(matchedTypes) as any } });
+    }
+
+    const cars = await prisma.carForRent.findMany({
+      where: { OR: orConditions },
+    });
+    return cars;
+  } catch (error) {
+    console.error(error);
+    throw new Error("Search failed");
+  }
+};
