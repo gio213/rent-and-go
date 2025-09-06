@@ -1,25 +1,23 @@
 import { filter_cars_typed } from "@/actions/car.actions";
 import CarCard from "@/components/CarCard";
 import Filter from "@/components/Filter";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Suspense } from "react";
 
-interface HomePageProps {
-  params: { locale: string };
-  searchParams: Promise<{
-    minPrice?: string | string[];
-    maxPrice?: string | string[];
-    type?: string | string[];
-    fuelType?: string | string[];
-    transmission?: string | string[];
-  }>;
+type SearchParams = {
+  minPrice?: string | string[];
+  maxPrice?: string | string[];
+  type?: string | string[];
+  fuelType?: string | string[];
+  transmission?: string | string[];
+};
+
+interface PageProps {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<SearchParams>;
 }
 
-// Alternative version with even cleaner param handling
-async function page({ params, searchParams }: HomePageProps) {
+export default async function Page({ params, searchParams }: PageProps) {
   const sp = await searchParams;
-  console.log("Search Params:", sp);
-  // More concise filter extraction
+
   const filters = {
     minPrice: sp.minPrice
       ? parseInt(
@@ -42,11 +40,11 @@ async function page({ params, searchParams }: HomePageProps) {
       : sp.transmission || undefined,
   };
 
-  // Remove undefined values to avoid passing empty filters
   const cleanFilters = Object.fromEntries(
-    Object.entries(filters).filter(([_, value]) => value !== undefined)
+    Object.entries(filters).filter(([, value]) => value !== undefined)
   );
 
+  // use whichever your action expects (sp or cleanFilters)
   const result = await filter_cars_typed(sp);
 
   if (!result.success) {
@@ -77,5 +75,3 @@ async function page({ params, searchParams }: HomePageProps) {
     </div>
   );
 }
-
-export default page;
