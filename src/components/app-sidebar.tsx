@@ -3,6 +3,7 @@ import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -13,6 +14,7 @@ import {
 import { adminDashboardLinks } from "@/constants/adminDashboardLinks";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
+import UserProfile from "./UserProfile";
 
 // Menu items.
 
@@ -23,7 +25,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Rent and Go</SidebarGroupLabel>
+          <SidebarGroupLabel>Rent and Go Admin Dashboard</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {adminDashboardLinks.map((item) => (
@@ -39,6 +41,11 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* Footer pinned to the bottom of the sidebar */}
+        <SidebarFooter className="mt-auto">
+          <UserProfile />
+        </SidebarFooter>
       </SidebarContent>
     </Sidebar>
   );

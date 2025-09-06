@@ -50,11 +50,32 @@ export async function create_stripe_checkout_session(
     // 4) სესიის შექმნა
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
+      customer_email: user.email ?? undefined,
+      customer_creation: "always",
+
+      invoice_creation: {
+        enabled: true,
+        invoice_data: {
+          description: `Booking for ${stripe_session_data.carName} ${stripe_session_data.carModel} for ${durationDays} days`,
+          metadata: {
+            carId: String(stripe_session_data.carId ?? ""),
+            userId: String(user.id),
+            totalDays: String(durationDays),
+            car: String(stripe_session_data.carName),
+            model: String(stripe_session_data.carModel ?? ""),
+            startDate: String(stripe_session_data.startDate.toISOString()),
+            endDate: String(stripe_session_data.endDate.toISOString()),
+            totalPrice: String(totalPrice.toFixed(0)), // ანთწილადების მოშორება
+          },
+        },
+      },
+
       line_items: [
         {
           price_data: {
             // თუ დოლარზე ხარ, დატოვე "usd"; EU-ში ჯობს "eur"
             currency: "usd",
+
             unit_amount: unitAmount,
             product_data: {
               name: `Booking for ${stripe_session_data.carName} ${stripe_session_data.carModel}`,
@@ -62,6 +83,7 @@ export async function create_stripe_checkout_session(
               images: [`${stripe_session_data.carImage}`],
             },
           },
+
           quantity: 1,
         },
       ],

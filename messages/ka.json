@@ -98,7 +98,8 @@
   "AppSidebar": {
     "Dashboard": "პანელი",
     "Add Car": "მანქანის დამატება",
-    "List Cars": "მანქანების სია"
+    "List Cars": "მანქანების სია",
+    "admin home": "მთავარი"
   },
   "UnauthorizedPage": {
     "title": "წვდომა უარყოფილია",

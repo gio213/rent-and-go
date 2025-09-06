@@ -1,4 +1,4 @@
-import { CarIcon, LayoutDashboardIcon, PlusCircle } from "lucide-react";
+import { CarIcon, Home, LayoutDashboardIcon, PlusCircle } from "lucide-react";
 
 type AdminDashboardLink = {
   title: string;
@@ -7,6 +7,11 @@ type AdminDashboardLink = {
 };
 
 export const adminDashboardLinks: AdminDashboardLink[] = [
+  {
+    title: "admin home",
+    href: "/",
+    icon: <Home />,
+  },
   {
     title: "Dashboard",
     href: "/admin/dashboard",

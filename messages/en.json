@@ -98,7 +98,8 @@
   "AppSidebar": {
     "Dashboard": "Dashboard",
     "Add Car": "Add Car",
-    "List Cars": "List Cars"
+    "List Cars": "List Cars",
+    "admin home": "Home"
   },
   "UnauthorizedPage": {
     "title": "Access Denied",

@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import { Separator } from "@/components/ui/separator";
 import { ModeToggle } from "./ThemeMode";
 import NavItems from "./NavItems";
@@ -7,15 +8,34 @@ import Logo from "./Logo";
 import LocaleSwitcher from "./LocaleSwitcher";
 import UserProfile from "./UserProfile";
 import SearchComponent from "./SearchComponent";
+import { usePathname } from "next/navigation";
 
 interface HeaderProps {
   className?: string;
 }
 
 const Header: React.FC<HeaderProps> = ({ className = "" }) => {
+  const pathname = usePathname();
+  console.log("pathname", pathname);
+
+  const [isAdminRoute, setAdminRoute] = React.useState(false);
+
+  useEffect(() => {
+    if (pathname.includes("/admin")) {
+      setAdminRoute(true);
+    } else {
+      setAdminRoute(false);
+    }
+    return () => setAdminRoute(false);
+  }, [pathname]);
+
+  console.log("isAdminRoute", isAdminRoute);
+
   return (
     <header
-      className={`sticky top-0 z-50 w-full border-b backdrop-blur supports-[backdrop-filter]:bg-background/60 ${className}`}
+      className={` ${
+        isAdminRoute ? "hidden" : ""
+      } sticky top-0 z-50 w-full border-b backdrop-blur supports-[backdrop-filter]:bg-background/60 ${className}`}
     >
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center">

@@ -14,6 +14,7 @@ import { useLocale } from "next-intl";
 import Link from "next/link";
 import NoBookings from "./NoBookings";
 import { use, useEffect, useState } from "react";
+import { Download } from "lucide-react";
 
 export type Bookings = Awaited<ReturnType<typeof get_user_booking>>;
 
@@ -48,6 +49,7 @@ export function BookingsTable({ bookings }: { bookings: Bookings }) {
           <TableHead>To</TableHead>
           <TableHead>Total Days</TableHead>
           <TableHead>Payment Status</TableHead>
+          <TableHead>Invoice</TableHead>
           <TableHead className="text-right">Paid</TableHead>
         </TableRow>
       </TableHeader>
@@ -82,6 +84,23 @@ export function BookingsTable({ bookings }: { bookings: Bookings }) {
             </TableCell>
             <TableCell>{booking.durationDays}</TableCell>
             <TableCell>{booking.status}</TableCell>
+            {booking.stripeReceiptUrl ? (
+              <TableCell>
+                <Link
+                  href={booking.stripeReceiptUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline"
+                >
+                  <Download
+                    className="w-4 h-4 inline-block"
+                    aria-label="Download invoice"
+                  />
+                </Link>
+              </TableCell>
+            ) : (
+              <TableCell>N/A</TableCell>
+            )}
             <TableCell className="text-right">${booking.totalPrice}</TableCell>
           </TableRow>
         ))}

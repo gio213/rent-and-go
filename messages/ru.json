@@ -98,7 +98,8 @@
   "AppSidebar": {
     "Dashboard": "Панель управления",
     "Add Car": "Добавить автомобиль",
-    "List Cars": "Список автомобилей"
+    "List Cars": "Список автомобилей",
+    "admin home": "Главная"
   },
   "UnauthorizedPage": {
     "title": "Доступ запрещен",
