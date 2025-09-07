@@ -15,9 +15,9 @@ import {
   cart_transmission_types,
 } from "@/constants/filter";
 import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 
 const Filter = () => {
-  const locale = useLocale();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -60,10 +60,7 @@ const Filter = () => {
   }, [searchParams, pathname, router]);
 
   return (
-    <Card
-      className="w-full md:h-[calc(100vh-6rem)] self-start"
-      data-lenis-prevent
-    >
+    <Card className="md:h-[calc(100vh-2rem)] " data-lenis-prevent>
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base">
           <FilterIcon className="h-4 w-4" />
@@ -164,6 +161,7 @@ const Filter = () => {
                 ))}
               </div>
             </div>
+            {/* !todo Price Range Section */}
           </div>
         </ScrollArea>
       </CardContent>

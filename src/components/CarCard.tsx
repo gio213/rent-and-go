@@ -48,11 +48,12 @@ const CarCard: React.FC<CarCardProps> = ({ car }) => {
       {/* Image Section */}
       <div className="relative h-48 overflow-hidden">
         <Image
+          priority
           src={currentImage}
           width={400}
           height={300}
           alt={`${car.brand} ${car.model}`}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          className=" object-cover group-hover:scale-105 transition-transform duration-300"
         />
 
         {/* Image Navigation */}

@@ -187,164 +187,44 @@ export const search_car = async (query: string) => {
 };
 
 export const filter_cars_typed = async (
-  rawFilters?: Record<string, any>
+  params: { page?: number; limit?: number } & Record<string, any>
 ): Promise<{
   success: boolean;
   data: any[];
   error?: string;
+  page?: number;
+  limit?: number;
+  total?: number;
+  hasMore?: boolean;
 }> => {
+  const { page: pageParam, limit: limitParam, ...filters } = params;
+  const page = Math.max(1, pageParam ?? 1);
+  const limit = Math.min(50, Math.max(1, limitParam ?? 4));
+  console.log(page, limit);
+
   try {
-    console.log("Raw filters received:", rawFilters);
-
-    if (!rawFilters || Object.keys(rawFilters).length === 0) {
-      const list_cars = await prisma.carForRent.findMany({
-        orderBy: { createdAt: "desc" },
-      });
-      return { success: true, data: list_cars };
-    }
-
     const where: any = {};
+    const hasFilters = filters && Object.keys(filters).length > 0;
 
-    // Handle price filters
-    if (rawFilters.minPrice) {
-      const minPrice = parseInt(rawFilters.minPrice, 10);
-      if (!isNaN(minPrice)) {
-        where.price = { ...where.price, gte: minPrice };
+    if (hasFilters) {
+      // Handle price filters
+      if (filters.minPrice) {
+        const minPrice = parseInt(filters.minPrice, 10);
+        if (!isNaN(minPrice)) {
+          where.price = { ...where.price, gte: minPrice };
+        }
       }
-    }
 
-    if (rawFilters.maxPrice) {
-      const maxPrice = parseInt(rawFilters.maxPrice, 10);
-      if (!isNaN(maxPrice)) {
-        where.price = { ...where.price, lte: maxPrice };
+      if (filters.maxPrice) {
+        const maxPrice = parseInt(filters.maxPrice, 10);
+        if (!isNaN(maxPrice)) {
+          where.price = { ...where.price, lte: maxPrice };
+        }
       }
-    }
 
-    // Car type filters - map to your enum values
-    const carTypeFilters: string[] = [];
-
-    // Based on your Prisma schema, these should match your CarType enum
-    const carTypeMapping: Record<string, string> = {
-      sedan: "SEDAN",
-      suv: "SUV",
-      truck: "TRUCK",
-      coupe: "COUPE",
-      convertible: "CONVERTIBLE",
-      hatchback: "HATCHBACK",
-      minivan: "MINIVAN",
-      wagon: "WAGON",
-    };
-
-    Object.entries(carTypeMapping).forEach(([filterKey, enumValue]) => {
-      if (rawFilters[filterKey] === "true") {
-        carTypeFilters.push(enumValue);
-      }
-    });
-
-    if (carTypeFilters.length > 0) {
-      where.type =
-        carTypeFilters.length === 1
-          ? carTypeFilters[0]
-          : { in: carTypeFilters };
-    }
-
-    // Fuel type filters
-    const fuelTypeFilters: string[] = [];
-    const fuelTypes = ["petrol", "diesel", "electric", "hybrid", "lpg"];
-
-    fuelTypes.forEach((fuelType) => {
-      if (rawFilters[fuelType] === "true") {
-        fuelTypeFilters.push(fuelType);
-      }
-    });
-
-    if (fuelTypeFilters.length > 0) {
-      where.fuelType =
-        fuelTypeFilters.length === 1
-          ? fuelTypeFilters[0]
-          : { in: fuelTypeFilters };
-    }
-
-    // Transmission filters
-    const transmissionFilters: string[] = [];
-    const transmissions = ["automatic", "manual", "cvt"];
-
-    transmissions.forEach((transmission) => {
-      if (rawFilters[transmission] === "true") {
-        transmissionFilters.push(transmission);
-      }
-    });
-
-    if (transmissionFilters.length > 0) {
-      where.transmission =
-        transmissionFilters.length === 1
-          ? transmissionFilters[0]
-          : { in: transmissionFilters };
-    }
-
-    console.log("Final where clause:", JSON.stringify(where, null, 2));
-
-    const cars = await prisma.carForRent.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-    });
-
-    return { success: true, data: cars };
-  } catch (error) {
-    console.error("Error filtering cars:", error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Failed to fetch cars",
-      data: [],
-    };
-  }
-};
-
-// Alternative version with better type safety using Prisma types
-export const filter_cars_with_types = async (
-  rawFilters?: Record<string, any>
-): Promise<{
-  success: boolean;
-  data: any[];
-  error?: string;
-}> => {
-  try {
-    console.log("Raw filters received:", rawFilters);
-
-    if (!rawFilters || Object.keys(rawFilters).length === 0) {
-      const list_cars = await prisma.carForRent.findMany({
-        orderBy: { createdAt: "desc" },
-      });
-      return { success: true, data: list_cars };
-    }
-
-    // Build where clause with proper Prisma types
-    const where: {
-      price?: { gte?: number; lte?: number };
-      type?: string | { in: string[] };
-      fuelType?: string | { in: string[] };
-      transmission?: string | { in: string[] };
-    } = {};
-
-    // Price filters
-    if (rawFilters.minPrice) {
-      const minPrice = parseInt(rawFilters.minPrice, 10);
-      if (!isNaN(minPrice)) {
-        where.price = { ...where.price, gte: minPrice };
-      }
-    }
-
-    if (rawFilters.maxPrice) {
-      const maxPrice = parseInt(rawFilters.maxPrice, 10);
-      if (!isNaN(maxPrice)) {
-        where.price = { ...where.price, lte: maxPrice };
-      }
-    }
-
-    // Define all possible filter mappings
-    const filterConfig = {
-      type: {
-        // Map frontend filter names to database enum values
+      // Car type filters - map to your enum values
+      const carTypeFilters: string[] = [];
+      const carTypeMapping: Record<string, string> = {
         sedan: "SEDAN",
         suv: "SUV",
         truck: "TRUCK",
@@ -353,48 +233,78 @@ export const filter_cars_with_types = async (
         hatchback: "HATCHBACK",
         minivan: "MINIVAN",
         wagon: "WAGON",
-      },
-      fuelType: {
-        // These might match your database values directly
-        petrol: "petrol",
-        diesel: "diesel",
-        electric: "electric",
-        hybrid: "hybrid",
-        lpg: "lpg",
-      },
-      transmission: {
-        // These might match your database values directly
-        automatic: "automatic",
-        manual: "manual",
-        cvt: "cvt",
-      },
-    };
+      };
 
-    // Process each filter category
-    Object.entries(filterConfig).forEach(([dbField, mapping]) => {
-      const selectedValues: string[] = [];
-
-      Object.entries(mapping).forEach(([filterKey, dbValue]) => {
-        if (rawFilters[filterKey] === "true") {
-          selectedValues.push(dbValue);
+      Object.entries(carTypeMapping).forEach(([filterKey, enumValue]) => {
+        if (filters[filterKey] === "true") {
+          carTypeFilters.push(enumValue);
         }
       });
 
-      if (selectedValues.length > 0) {
-        (where as any)[dbField] =
-          selectedValues.length === 1
-            ? selectedValues[0]
-            : { in: selectedValues };
+      if (carTypeFilters.length > 0) {
+        where.type =
+          carTypeFilters.length === 1
+            ? carTypeFilters[0]
+            : { in: carTypeFilters };
       }
-    });
 
-    console.log("Final where clause:", JSON.stringify(where, null, 2));
+      // Fuel type filters
+      const fuelTypeFilters: string[] = [];
+      const fuelTypes = ["petrol", "diesel", "electric", "hybrid", "lpg"];
 
-    const cars = await prisma.carForRent.findMany({
-      orderBy: { createdAt: "desc" },
-    });
+      fuelTypes.forEach((fuelType) => {
+        if (filters[fuelType] === "true") {
+          fuelTypeFilters.push(fuelType);
+        }
+      });
 
-    return { success: true, data: cars };
+      if (fuelTypeFilters.length > 0) {
+        where.fuelType =
+          fuelTypeFilters.length === 1
+            ? fuelTypeFilters[0]
+            : { in: fuelTypeFilters };
+      }
+
+      // Transmission filters
+      const transmissionFilters: string[] = [];
+      const transmissions = ["automatic", "manual", "cvt"];
+
+      transmissions.forEach((transmission) => {
+        if (filters[transmission] === "true") {
+          transmissionFilters.push(transmission);
+        }
+      });
+
+      if (transmissionFilters.length > 0) {
+        where.transmission =
+          transmissionFilters.length === 1
+            ? transmissionFilters[0]
+            : { in: transmissionFilters };
+      }
+    }
+
+    // Execute queries in parallel for better performance
+    const [total, items] = await Promise.all([
+      prisma.carForRent.count({ where }),
+      prisma.carForRent.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * limit,
+        take: 2,
+      }),
+    ]);
+
+    // Calculate if there are more items to load
+    const hasMore = page * limit < total;
+
+    return {
+      success: true,
+      data: items,
+      page,
+      limit,
+      total,
+      hasMore,
+    };
   } catch (error) {
     console.error("Error filtering cars:", error);
     return {
