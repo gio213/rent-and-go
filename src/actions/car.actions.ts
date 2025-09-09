@@ -196,11 +196,11 @@ export const filter_cars_typed = async (
   limit?: number;
   total?: number;
   hasMore?: boolean;
+  predictNextCount?: number;
 }> => {
   const { page: pageParam, limit: limitParam, ...filters } = params;
   const page = Math.max(1, pageParam ?? 1);
   const limit = Math.min(50, Math.max(1, limitParam ?? 4));
-  console.log(page, limit);
 
   try {
     const where: any = {};
@@ -290,7 +290,7 @@ export const filter_cars_typed = async (
         where,
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * limit,
-        take: 2,
+        take: 8,
       }),
     ]);
 

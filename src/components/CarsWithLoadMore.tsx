@@ -22,6 +22,7 @@ export default function CarsWithLoadMore({
   const [cars, setCars] = useState(initialCars);
   const [page, setPage] = useState(initialPage);
   const [hasMore, setHasMore] = useState(initialHasMore);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [filtersLoading, setFiltersLoading] = useState(false);
 
@@ -44,12 +45,13 @@ export default function CarsWithLoadMore({
 
         const result = await filter_cars_typed({
           page: 1,
-          limit: 4,
+          limit: 8,
           ...currentFilters,
         });
 
         if (result.success) {
           setCars(result.data);
+          setTotal(result.total || 0);
           setPage(1);
           setHasMore(result.hasMore || false);
         } else {
@@ -80,7 +82,7 @@ export default function CarsWithLoadMore({
 
       const result = await filter_cars_typed({
         page: nextPage,
-        limit: 4,
+        limit: 8,
         ...currentFilters,
       });
 
@@ -122,7 +124,7 @@ export default function CarsWithLoadMore({
             disabled={loading || filtersLoading}
             variant="outline"
             size="lg"
-            className="min-w-32"
+            className="min-w-32 hover:cursor-pointer"
           >
             {loading ? (
               <>
@@ -130,7 +132,7 @@ export default function CarsWithLoadMore({
                 Loading...
               </>
             ) : (
-              `Load More (${cars.length} shown)`
+              `Shown ${cars.length} of ${total} - Load More`
             )}
           </Button>
         </div>
