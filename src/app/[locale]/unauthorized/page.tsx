@@ -15,8 +15,9 @@ import Link from "next/link";
 export default async function UnauthorizedPage() {
   const t = await getTranslations("UnauthorizedPage");
 
+  
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex t items-center justify-center p-4">
       <div className="max-w-lg w-full space-y-8">
         <Card className="border-2 shadow-lg">
           <CardHeader className="text-center space-y-4">
@@ -39,6 +40,7 @@ export default async function UnauthorizedPage() {
                   "You don't have permission to access this resource."}
               </AlertDescription>
             </Alert>
+          
 
             <Separator />
 

@@ -7,11 +7,14 @@ export const car_types = [
   { label: "Wagon", value: "wagon" },
   { label: "Van", value: "van" },
   { label: "Truck", value: "truck" },
+  {label:"Super", value:"super"}
 ];
 
 export const cart_transmission_types = [
   { label: "Automatic", value: "automatic" },
   { label: "Manual", value: "manual" },
+
+  
 ];
 
 export const car_fuel_types = [

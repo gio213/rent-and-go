@@ -19,6 +19,18 @@ export const env = createEnv({
     STRIPE_WEBHOOK_SECRET: z.string().min(1, {
       message: "STRIPE_WEBHOOK_SECRET is required",
     }),
+    QSTASH_URL: z.url().min(1, {
+      message: "QSTASH_URL is required",
+    }),
+    QSTASH_TOKEN: z.string().min(1, {
+      message: "QSTASH_TOKEN is required",
+    }),
+    QSTASH_CURRENT_SIGNING_KEY: z.string().min(1, {
+      message: "QSTASH_CURRENT_SIGNING_KEY is required",
+    }),
+    QSTASH_NEXT_SIGNING_KEY: z.string().min(1, {
+      message: "QSTASH_NEXT_SIGNING_KEY is required",
+    }),
   },
   client: {
     NEXT_PUBLIC_BASE_URL: z.url().min(1, {

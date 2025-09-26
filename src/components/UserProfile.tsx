@@ -23,7 +23,6 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import { useAuth } from "@/context/authContext";
 import LoginButton from "./LoginButton";
-import { Role } from "@prisma/client";
 import { useLocale, useTranslations } from "next-intl";
 
 const UserProfile = () => {

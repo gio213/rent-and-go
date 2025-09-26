@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 import Stripe from "stripe";
 import { NextRequest, NextResponse } from "next/server";
+import { computeReminderAt } from "@/lib/time";
+import qstash from "@/lib/qstash";
 
 const endpointSecret = env.STRIPE_WEBHOOK_SECRET;
 
@@ -189,6 +191,8 @@ async function handlePaymentIntentSucceeded(
           );
         }
 
+        const computedReminderAtIso = computeReminderAt(parsedEndDate);
+
         return await tx.booking.create({
           data: {
             user: { connect: { id: validatedMetadata.userId } },
@@ -201,9 +205,17 @@ async function handlePaymentIntentSucceeded(
             status: "CONFIRMED",
             stripeSessionId: sessionId!,
             stripePaymentIntentId: paymentIntent.id,
+            reminderAt: computedReminderAtIso,
           },
         });
       }
+    });
+    await qstash.schedules.create({
+      destination: `${env.NEXT_PUBLIC_BASE_URL}/api/reminders/return-car`,
+      cron: "0 9 * * *", // every day at 9am
+
+      body: JSON.stringify({ bookingId: result.id }),
+      // optional: deduplication or callback headers
     });
 
     console.log(`Successfully processed booking: ${result.id}`);

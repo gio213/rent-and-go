@@ -1,3 +1,5 @@
+"use client";
+import { useTheme } from "next-themes";
 import Image from "next/image";
 import React from "react";
 
@@ -10,6 +12,8 @@ const Logo = ({
   height?: number;
   className?: string;
 }) => {
+  const { theme } = useTheme();
+  console.log("Current theme:", theme);
   return (
     <Image
       src="/logo/logo.svg"
