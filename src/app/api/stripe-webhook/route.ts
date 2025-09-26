@@ -24,7 +24,10 @@ interface WebhookMetadata {
 }
 
 class WebhookError extends Error {
-  constructor(message: string, public statusCode: number = 500) {
+  constructor(
+    message: string,
+    public statusCode: number = 500
+  ) {
     super(message);
     this.name = "WebhookError";
   }
@@ -276,31 +279,17 @@ async function handleChargeSucceeded(charge: Stripe.Charge) {
     };
 
     if (charge.receipt_url) {
-      updateData.stripeReceiptUrl = charge.receipt_url;
-      console.log(`Receipt URL available: ${charge.receipt_url}`);
+      qstash.schedules.create({
+        destination: `${env.NEXT_PUBLIC_BASE_URL}/api/update-invoice`,
+        cron: "*/15 * * * *", // every 15 minutes
+        body: JSON.stringify({
+          paymentIntentId: charge.payment_intent,
+          receiptUrl: charge.receipt_url,
+        }),
+        // optional: deduplication or callback headers
+      });
     } else {
       console.warn("Receipt URL not yet available in charge object");
-
-      // OPTION 2: Implement retry mechanism with exponential backoff
-      setTimeout(async () => {
-        try {
-          const refreshedCharge = await stripe.charges.retrieve(charge.id);
-          if (refreshedCharge.receipt_url) {
-            await prisma.booking.updateMany({
-              where: { stripePaymentIntentId: charge.payment_intent as string },
-              data: {
-                stripeReceiptUrl: refreshedCharge.receipt_url,
-                updatedAt: new Date(),
-              },
-            });
-            console.log(
-              `Updated booking with delayed receipt URL: ${refreshedCharge.receipt_url}`
-            );
-          }
-        } catch (error) {
-          console.error("Error in delayed receipt URL update:", error);
-        }
-      }, 5000); // Retry after 5 seconds
     }
 
     const updatedBookings = await prisma.booking.updateMany({

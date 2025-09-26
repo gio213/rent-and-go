@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { Resend } from "resend";
 import { addDays, startOfDay, endOfDay, isWithinInterval } from "date-fns";
 import { fromZonedTime } from "date-fns-tz";
+import { authorized } from "@/lib/cron-helper";
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
@@ -22,12 +23,6 @@ function endsTomorrowInTZ(endsAtUTC: Date, tz: string | null | undefined) {
   const endsLocal = fromZonedTime(endsAtUTC, zone);
 
   return isWithinInterval(endsLocal, { start, end });
-}
-
-// (optional) protect cron with a header
-function authorized(req: Request) {
-  const need = process.env.CRON_SECRET;
-  return !need || req.headers.get("x-cron-secret") === need;
 }
 
 export async function GET(req: Request) {
