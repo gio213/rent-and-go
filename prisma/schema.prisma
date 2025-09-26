@@ -57,6 +57,9 @@ model Booking {
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
   status                BookingStatus @default(PENDING)
+  timeZone              String?
+  reminderAt            DateTime?
+  reminderSentAt        DateTime?
   stripeInvoiceUrl      String?
   stripeReceiptUrl      String?
   stripeCustomerId      String?       @unique
